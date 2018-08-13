@@ -1,3 +1,4 @@
+import axe from './axe';
 import asyncAttrInScript from './markuplint-rule-async-attr-in-script';
 
-export default [asyncAttrInScript];
+export default [axe, asyncAttrInScript];
