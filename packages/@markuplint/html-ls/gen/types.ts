@@ -6,13 +6,9 @@ export interface MLMLSpecJSON {
 
 export type ElementSpec = {
 	name: string;
+	cite: string;
 	description?: string;
-	categories: (
-		| ElementCategory
-		| {
-				category: ElementCategory;
-				condition: ElementCondition;
-		  })[];
+	categories: ElementCategories;
 	contentModel: {
 		exists: 'required' | 'any';
 		models: string[];
@@ -21,10 +17,18 @@ export type ElementSpec = {
 	attributes: (AttributeSpec | string)[];
 };
 
+export type ElementCategories = (
+	| ElementCategory
+	| {
+			category: ElementCategory;
+			condition: ElementCondition;
+	  })[];
+
 /**
  * @cite https://html.spec.whatwg.org/multipage/dom.html#kinds-of-content
  */
 export type ElementCategory =
+	| 'transparent'
 	| 'metadata'
 	| 'flow'
 	| 'sectioning'
