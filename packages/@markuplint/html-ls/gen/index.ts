@@ -10,7 +10,7 @@ import { getAria } from './aria';
 const writeFile = util.promisify(fs.writeFile);
 
 async function main() {
-	const outputFilePath = path.resolve(__dirname, `../__test.json`);
+	const outputFilePath = path.resolve(__dirname, `../index.json`);
 
 	const specs = await getHTMLElements();
 	const globalAttrs = await getGlobalAttrs();

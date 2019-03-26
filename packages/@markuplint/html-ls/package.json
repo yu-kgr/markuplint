@@ -11,8 +11,8 @@
 		"access": "public"
 	},
 	"scripts": {
-		"gen": "ts-node gen/index.ts",
-		"schema": "typescript-json-schema -o ml-specs.schema.json --ignoreErrors gen/types.ts MLMLSpecJSON "
+		"gen": "ts-node gen/index.ts; prettier --write index.json",
+		"schema": "typescript-json-schema -o ml-specs.schema.json --ignoreErrors gen/types.ts MLMLSpecJSON; prettier --write ml-specs.schema.json"
 	},
 	"devDependencies": {
 		"@types/cheerio": "^0.22.11",

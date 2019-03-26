@@ -37,6 +37,7 @@ export async function getGlobalAttrs() {
 
 		const attr: Attribute = {
 			name,
+			description: 'WIP',
 			category,
 			value,
 		};

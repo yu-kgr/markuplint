@@ -26,7 +26,7 @@ export async function getAria() {
 			return {
 				name,
 				description,
-				isAbstract: pkgEl.attrsMap.isAbstract,
+				isAbstract: !!pkgEl.attrsMap.isAbstract || undefined,
 				generalization: pkgEl.child.generalization
 					? pkgEl.child.generalization.map((gen: any) => gen.attrsMap.general)
 					: [],
@@ -47,7 +47,7 @@ export async function getAria() {
 			const $section = $(`#${name}`);
 			const className = $section.attr('class');
 			const type = /property/i.test(className) ? 'property' : 'state';
-			const isDeprecated = /deprecated/i.test(className);
+			const deprecated = /deprecated/i.test(className) || undefined;
 			const $value = $section.find(`table.${type}-features .${type}-value`);
 			const value = $value.text().trim() as ARIAAttributeValue;
 			const $defaultValue = $section.find(`table.value-descriptions .value-name .default`);
@@ -59,7 +59,7 @@ export async function getAria() {
 			return {
 				name,
 				type,
-				isDeprecated,
+				deprecated,
 				value,
 				defaultValue,
 			};

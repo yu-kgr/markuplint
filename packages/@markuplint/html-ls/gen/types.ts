@@ -36,6 +36,13 @@ export type ElementSpec = {
 	description?: string;
 
 	/**
+	 * If element is obsolete then defined alternate element name.
+	 */
+	obsolete?: {
+		alt: string;
+	};
+
+	/**
 	 * Element cateogries
 	 */
 	categories: ElementCategories;
@@ -96,12 +103,15 @@ export type ElementCondition = {
 
 export type Attribute = {
 	name: string;
+	description: string;
 	category: AttributeCtegory;
+	experimental?: true;
+	obsolete?: true;
 	value: AttributeValue;
 };
 
 export type AttributeSpec = Attribute & {
-	required: boolean;
+	required?: true;
 };
 
 export type AttributeCtegory = 'global' | 'xml' | 'aria' | 'eventhandler' | 'form' | 'particular';
@@ -111,7 +121,7 @@ export type AttributeValue = 'string' | 'space-separated-tokens' | 'function-bod
 export type ARIRRoleAttribute = {
 	name: string;
 	description: string;
-	isAbstract: boolean;
+	isAbstract?: true;
 	generalization: string[];
 	ownedAttribute: string[];
 };
@@ -119,7 +129,7 @@ export type ARIRRoleAttribute = {
 export type ARIAAttribute = {
 	name: string;
 	type: 'property' | 'state';
-	isDeprecated: boolean;
+	deprecated?: true;
 	value: ARIAAttributeValue;
 	defaultValue?: string;
 };
