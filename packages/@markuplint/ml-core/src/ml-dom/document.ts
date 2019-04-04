@@ -37,9 +37,10 @@ export default class MLDOMDocument<T extends RuleConfigValue, O = null> {
 	 * @param ruleset ruleset object
 	 */
 	constructor(ast: MLASTDocument, specs: SpecOM, ruleset: Ruleset) {
-		this.nodeList = Object.freeze(ast.nodeList.map(astNode => createNode<MLASTNode, T, O>(astNode, this)));
 		this.specs = specs;
 		this.isFragment = ast.isFragment;
+
+		this.nodeList = Object.freeze(ast.nodeList.map(astNode => createNode<MLASTNode, T, O>(astNode, this)));
 
 		// add rules to node
 		for (const node of this.nodeList) {
@@ -136,7 +137,10 @@ export type Walker<T extends RuleConfigValue, O = null, N = AnonymousNode<T, O>>
 
 export type SyncWalker<T extends RuleConfigValue, O = null, N = AnonymousNode<T, O>> = (node: N) => void;
 
-function syncWalk<T extends RuleConfigValue, O = null>(nodeList: AnonymousNode<T, O>[], walker: SyncWalker<T, O>) {
+export function syncWalk<T extends RuleConfigValue, O = null>(
+	nodeList: AnonymousNode<T, O>[],
+	walker: SyncWalker<T, O>,
+) {
 	for (const node of nodeList) {
 		walker(node);
 	}

@@ -88,12 +88,7 @@ export type ElementSpec = {
 	attributes: (AttributeSpec | string)[];
 };
 
-export type ElementCategories = (
-	| ElementCategory
-	| {
-			category: ElementCategory;
-			condition: ElementCondition;
-	  })[];
+export type ElementCategories = (ElementCategory | ConditionalElementCategory)[];
 
 /**
  * Element Category
@@ -128,14 +123,6 @@ export type PermittedContent =
 			then?: PermittedContentEitherElements;
 	  };
 
-export type ConditionalPermittedContent = {
-	if: {
-		hasAttr?: string;
-	};
-	then: PermittedContent;
-	else?: PermittedContent;
-};
-
 export type PermittedContentEitherElements = {
 	either: (string | { category: ElementCategory; ignore: string[] })[];
 };
@@ -145,13 +132,34 @@ export type PermittedRolesSpec = {};
 export type ElementSpecOmittion = false | ElementSpecOmittionTags;
 
 type ElementSpecOmittionTags = {
-	startTag: boolean | ElementCondition;
-	endTag: boolean | ElementCondition;
+	startTag: boolean | ConditionalElementSpecOmittionTags;
+	endTag: boolean | ConditionalElementSpecOmittionTags;
 };
 
 export type ElementCondition = {
-	__WIP__: 'WORK_IN_PROGRESS';
+	hasAttr?: string;
 };
+
+interface Conditional {
+	if: ElementCondition;
+	then: unknown;
+	else?: unknown;
+}
+
+interface ConditionalElementCategory extends Conditional {
+	then: ElementCategory;
+	else?: ElementCategory;
+}
+
+export interface ConditionalPermittedContent extends Conditional {
+	then: PermittedContent;
+	else?: PermittedContent;
+}
+
+interface ConditionalElementSpecOmittionTags extends Conditional {
+	then: boolean;
+	else?: boolean;
+}
 
 export type Attribute = {
 	name: string;

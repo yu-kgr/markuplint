@@ -1,4 +1,4 @@
-import { ElementCategories, MLMLSpec } from './types';
+import { ElementCategories, MLMLSpec, PermittedContentSpec } from './types';
 export * from './types';
 
 export interface SpecOM {
@@ -11,6 +11,7 @@ export interface MLDOMElementSpec {
 	deprecated: boolean;
 	nonStandard: boolean;
 	categories: ElementCategories;
+	permittedContent: PermittedContentSpec;
 }
 
 export function getSpecOM({ specs }: MLMLSpec): SpecOM {
@@ -22,6 +23,7 @@ export function getSpecOM({ specs }: MLMLSpec): SpecOM {
 			deprecated: !!el.deprecated,
 			nonStandard: !!el.nonStandard,
 			categories: el.categories,
+			permittedContent: el.permittedContent,
 		};
 	}
 	return som;

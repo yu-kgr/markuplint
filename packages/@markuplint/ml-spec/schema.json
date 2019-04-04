@@ -25,6 +25,239 @@
 			"enum": ["float", "function-body", "int", "space-separated-tokens", "string", "uint"],
 			"type": "string"
 		},
+		"ConditionalElementCategory": {
+			"properties": {
+				"else": {
+					"$ref": "#/definitions/ElementCategory"
+				},
+				"if": {
+					"properties": {
+						"hasAttr": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"then": {
+					"$ref": "#/definitions/ElementCategory"
+				}
+			},
+			"type": "object"
+		},
+		"ConditionalElementSpecOmittionTags": {
+			"properties": {
+				"else": {
+					"type": "boolean"
+				},
+				"if": {
+					"properties": {
+						"hasAttr": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"then": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ConditionalPermittedContent": {
+			"properties": {
+				"else": {
+					"anyOf": [
+						{
+							"properties": {
+								"either": {
+									"items": {
+										"anyOf": [
+											{
+												"properties": {
+													"category": {
+														"$ref": "#/definitions/ElementCategory"
+													},
+													"ignore": {
+														"items": {
+															"type": "string"
+														},
+														"type": "array"
+													}
+												},
+												"type": "object"
+											},
+											{
+												"type": "string"
+											}
+										]
+									},
+									"type": "array"
+								}
+							},
+							"type": "object"
+						},
+						{
+							"properties": {
+								"only": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						{
+							"properties": {
+								"then": {
+									"properties": {
+										"either": {
+											"items": {
+												"anyOf": [
+													{
+														"properties": {
+															"category": {
+																"$ref": "#/definitions/ElementCategory"
+															},
+															"ignore": {
+																"items": {
+																	"type": "string"
+																},
+																"type": "array"
+															}
+														},
+														"type": "object"
+													},
+													{
+														"type": "string"
+													}
+												]
+											},
+											"type": "array"
+										}
+									},
+									"type": "object"
+								},
+								"zeroOrMore": {
+									"anyOf": [
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										{
+											"type": "string"
+										}
+									]
+								}
+							},
+							"type": "object"
+						},
+						{
+							"type": "boolean"
+						}
+					]
+				},
+				"if": {
+					"properties": {
+						"hasAttr": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"then": {
+					"anyOf": [
+						{
+							"properties": {
+								"either": {
+									"items": {
+										"anyOf": [
+											{
+												"properties": {
+													"category": {
+														"$ref": "#/definitions/ElementCategory"
+													},
+													"ignore": {
+														"items": {
+															"type": "string"
+														},
+														"type": "array"
+													}
+												},
+												"type": "object"
+											},
+											{
+												"type": "string"
+											}
+										]
+									},
+									"type": "array"
+								}
+							},
+							"type": "object"
+						},
+						{
+							"properties": {
+								"only": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						{
+							"properties": {
+								"then": {
+									"properties": {
+										"either": {
+											"items": {
+												"anyOf": [
+													{
+														"properties": {
+															"category": {
+																"$ref": "#/definitions/ElementCategory"
+															},
+															"ignore": {
+																"items": {
+																	"type": "string"
+																},
+																"type": "array"
+															}
+														},
+														"type": "object"
+													},
+													{
+														"type": "string"
+													}
+												]
+											},
+											"type": "array"
+										}
+									},
+									"type": "object"
+								},
+								"zeroOrMore": {
+									"anyOf": [
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										{
+											"type": "string"
+										}
+									]
+								}
+							},
+							"type": "object"
+						},
+						{
+							"type": "boolean"
+						}
+					]
+				}
+			},
+			"type": "object"
+		},
 		"ElementCategory": {
 			"description": "Element Category",
 			"enum": [
@@ -215,21 +448,7 @@
 						"items": {
 							"anyOf": [
 								{
-									"properties": {
-										"category": {
-											"$ref": "#/definitions/ElementCategory"
-										},
-										"condition": {
-											"properties": {
-												"__WIP__": {
-													"enum": ["WORK_IN_PROGRESS"],
-													"type": "string"
-												}
-											},
-											"type": "object"
-										}
-									},
-									"type": "object"
+									"$ref": "#/definitions/ConditionalElementCategory"
 								},
 								{
 									"enum": [
@@ -301,13 +520,7 @@
 									"endTag": {
 										"anyOf": [
 											{
-												"properties": {
-													"__WIP__": {
-														"enum": ["WORK_IN_PROGRESS"],
-														"type": "string"
-													}
-												},
-												"type": "object"
+												"$ref": "#/definitions/ConditionalElementSpecOmittionTags"
 											},
 											{
 												"type": "boolean"
@@ -317,13 +530,7 @@
 									"startTag": {
 										"anyOf": [
 											{
-												"properties": {
-													"__WIP__": {
-														"enum": ["WORK_IN_PROGRESS"],
-														"type": "string"
-													}
-												},
-												"type": "object"
+												"$ref": "#/definitions/ConditionalElementSpecOmittionTags"
 											},
 											{
 												"type": "boolean"
@@ -430,199 +637,7 @@
 										"type": "object"
 									},
 									{
-										"properties": {
-											"else": {
-												"anyOf": [
-													{
-														"properties": {
-															"either": {
-																"items": {
-																	"anyOf": [
-																		{
-																			"properties": {
-																				"category": {
-																					"$ref": "#/definitions/ElementCategory"
-																				},
-																				"ignore": {
-																					"items": {
-																						"type": "string"
-																					},
-																					"type": "array"
-																				}
-																			},
-																			"type": "object"
-																		},
-																		{
-																			"type": "string"
-																		}
-																	]
-																},
-																"type": "array"
-															}
-														},
-														"type": "object"
-													},
-													{
-														"properties": {
-															"only": {
-																"type": "string"
-															}
-														},
-														"type": "object"
-													},
-													{
-														"properties": {
-															"then": {
-																"properties": {
-																	"either": {
-																		"items": {
-																			"anyOf": [
-																				{
-																					"properties": {
-																						"category": {
-																							"$ref": "#/definitions/ElementCategory"
-																						},
-																						"ignore": {
-																							"items": {
-																								"type": "string"
-																							},
-																							"type": "array"
-																						}
-																					},
-																					"type": "object"
-																				},
-																				{
-																					"type": "string"
-																				}
-																			]
-																		},
-																		"type": "array"
-																	}
-																},
-																"type": "object"
-															},
-															"zeroOrMore": {
-																"anyOf": [
-																	{
-																		"items": {
-																			"type": "string"
-																		},
-																		"type": "array"
-																	},
-																	{
-																		"type": "string"
-																	}
-																]
-															}
-														},
-														"type": "object"
-													},
-													{
-														"type": "boolean"
-													}
-												]
-											},
-											"if": {
-												"properties": {
-													"hasAttr": {
-														"type": "string"
-													}
-												},
-												"type": "object"
-											},
-											"then": {
-												"anyOf": [
-													{
-														"properties": {
-															"either": {
-																"items": {
-																	"anyOf": [
-																		{
-																			"properties": {
-																				"category": {
-																					"$ref": "#/definitions/ElementCategory"
-																				},
-																				"ignore": {
-																					"items": {
-																						"type": "string"
-																					},
-																					"type": "array"
-																				}
-																			},
-																			"type": "object"
-																		},
-																		{
-																			"type": "string"
-																		}
-																	]
-																},
-																"type": "array"
-															}
-														},
-														"type": "object"
-													},
-													{
-														"properties": {
-															"only": {
-																"type": "string"
-															}
-														},
-														"type": "object"
-													},
-													{
-														"properties": {
-															"then": {
-																"properties": {
-																	"either": {
-																		"items": {
-																			"anyOf": [
-																				{
-																					"properties": {
-																						"category": {
-																							"$ref": "#/definitions/ElementCategory"
-																						},
-																						"ignore": {
-																							"items": {
-																								"type": "string"
-																							},
-																							"type": "array"
-																						}
-																					},
-																					"type": "object"
-																				},
-																				{
-																					"type": "string"
-																				}
-																			]
-																		},
-																		"type": "array"
-																	}
-																},
-																"type": "object"
-															},
-															"zeroOrMore": {
-																"anyOf": [
-																	{
-																		"items": {
-																			"type": "string"
-																		},
-																		"type": "array"
-																	},
-																	{
-																		"type": "string"
-																	}
-																]
-															}
-														},
-														"type": "object"
-													},
-													{
-														"type": "boolean"
-													}
-												]
-											}
-										},
-										"type": "object"
+										"$ref": "#/definitions/ConditionalPermittedContent"
 									},
 									{
 										"type": "boolean"
