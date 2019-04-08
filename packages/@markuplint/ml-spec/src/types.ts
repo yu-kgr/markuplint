@@ -113,19 +113,48 @@ export type PermittedContentSpec = {
 };
 
 export type PermittedContent =
-	| boolean
-	| PermittedContentEitherElements
-	| {
-			only: string;
-	  }
-	| {
-			zeroOrMore: string | string[];
-			then?: PermittedContentEitherElements;
-	  };
+	| PermittedContentEmpty
+	| PermittedContentAlways
+	| PermittedContentTagName
+	| PermittedContentElementCategory
+	| PermittedContentElementCategoryPartial
+	| PermittedContentEither
+	| PermittedContentEitherOne
+	| PermittedContentOrder;
 
-export type PermittedContentEitherElements = {
-	either: (string | { category: ElementCategory; ignore: string[] })[];
+export type PermittedContentEmpty = false;
+
+export type PermittedContentAlways = true;
+
+export type PermittedContentTagName = string;
+
+export type PermittedContentElementCategory = ElementCategory;
+
+export type PermittedContentElementCategoryPartial = {
+	category: PermittedContentElementCategory;
+	ignore: {
+		content: (PermittedContentTagName | PermittedContentElementCategory)[];
+		descendants?: true;
+	};
 };
+
+export type PermittedContentEither = {
+	either: (PermittedContentTagName | PermittedContentElementCategory | PermittedContentElementCategoryPartial)[];
+};
+
+export type PermittedContentEitherOne = {
+	eitherOne: (PermittedContentTagName | PermittedContentElementCategory | PermittedContentElementCategoryPartial)[];
+};
+
+export type PermittedContentOrder = {
+	count: 'zero-or-one' | 'zero-or-more' | 'one' | 'one-or-more';
+	content:
+		| PermittedContentTagName
+		| PermittedContentElementCategory
+		| PermittedContentElementCategoryPartial
+		| PermittedContentEither
+		| PermittedContentEitherOne;
+}[];
 
 export type PermittedRolesSpec = {};
 

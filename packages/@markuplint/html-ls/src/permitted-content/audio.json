@@ -2,26 +2,48 @@
 	"if": {
 		"hasAttr": "src"
 	},
-	"then": {
-		"zeroOrMore": "track",
-		"then": {
-			"either": [
-				{
-					"category": "transparent",
-					"ignore": ["track", "audio", "video"]
-				}
-			]
+	"then": [
+		{
+			"count": "zero-or-more",
+			"content": "track"
+		},
+		{
+			"count": "zero-or-more",
+			"content": {
+				"either": [
+					{
+						"category": "transparent",
+						"ignore": {
+							"content": ["audio", "video"],
+							"descendants": true
+						}
+					}
+				]
+			}
 		}
-	},
-	"else": {
-		"zeroOrMore": ["source", "track"],
-		"then": {
-			"either": [
-				{
-					"category": "transparent",
-					"ignore": ["source", "track", "audio", "video"]
-				}
-			]
+	],
+	"else": [
+		{
+			"count": "zero-or-more",
+			"content": "source"
+		},
+		{
+			"count": "zero-or-more",
+			"content": "track"
+		},
+		{
+			"count": "zero-or-more",
+			"content": {
+				"either": [
+					{
+						"category": "transparent",
+						"ignore": {
+							"content": ["audio", "video"],
+							"descendants": true
+						}
+					}
+				]
+			}
 		}
-	}
+	]
 }

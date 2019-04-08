@@ -2,7 +2,10 @@
 	"either": [
 		{
 			"category": "flow",
-			"ignore": ["address", "#heading", "#sectioning", "header", "footer"]
+			"ignore": {
+				"content": ["address", "#heading", "#sectioning", "header", "footer"],
+				"descendants": true
+			}
 		}
 	]
 }

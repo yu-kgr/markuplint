@@ -42,6 +42,7 @@
 					"$ref": "#/definitions/ElementCategory"
 				}
 			},
+			"required": ["if", "then"],
 			"type": "object"
 		},
 		"ConditionalElementSpecOmittionTags": {
@@ -61,6 +62,7 @@
 					"type": "boolean"
 				}
 			},
+			"required": ["if", "then"],
 			"type": "object"
 		},
 		"ConditionalPermittedContent": {
@@ -69,21 +71,57 @@
 					"anyOf": [
 						{
 							"properties": {
+								"category": {
+									"$ref": "#/definitions/PermittedContentElementCategory"
+								},
+								"ignore": {
+									"properties": {
+										"content": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"descendants": {
+											"enum": [true],
+											"type": "boolean"
+										}
+									},
+									"required": ["content"],
+									"type": "object"
+								}
+							},
+							"required": ["category", "ignore"],
+							"type": "object"
+						},
+						{
+							"properties": {
 								"either": {
 									"items": {
 										"anyOf": [
 											{
 												"properties": {
 													"category": {
-														"$ref": "#/definitions/ElementCategory"
+														"$ref": "#/definitions/PermittedContentElementCategory"
 													},
 													"ignore": {
-														"items": {
-															"type": "string"
+														"properties": {
+															"content": {
+																"items": {
+																	"type": "string"
+																},
+																"type": "array"
+															},
+															"descendants": {
+																"enum": [true],
+																"type": "boolean"
+															}
 														},
-														"type": "array"
+														"required": ["content"],
+														"type": "object"
 													}
 												},
+												"required": ["category", "ignore"],
 												"type": "object"
 											},
 											{
@@ -94,65 +132,179 @@
 									"type": "array"
 								}
 							},
+							"required": ["either"],
 							"type": "object"
 						},
 						{
 							"properties": {
-								"only": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						},
-						{
-							"properties": {
-								"then": {
-									"properties": {
-										"either": {
-											"items": {
-												"anyOf": [
-													{
+								"eitherOne": {
+									"items": {
+										"anyOf": [
+											{
+												"properties": {
+													"category": {
+														"$ref": "#/definitions/PermittedContentElementCategory"
+													},
+													"ignore": {
 														"properties": {
-															"category": {
-																"$ref": "#/definitions/ElementCategory"
-															},
-															"ignore": {
+															"content": {
 																"items": {
 																	"type": "string"
 																},
 																"type": "array"
+															},
+															"descendants": {
+																"enum": [true],
+																"type": "boolean"
 															}
 														},
+														"required": ["content"],
 														"type": "object"
-													},
-													{
-														"type": "string"
 													}
-												]
+												},
+												"required": ["category", "ignore"],
+												"type": "object"
 											},
-											"type": "array"
-										}
-									},
-									"type": "object"
-								},
-								"zeroOrMore": {
-									"anyOf": [
-										{
-											"items": {
+											{
 												"type": "string"
-											},
-											"type": "array"
-										},
-										{
-											"type": "string"
-										}
-									]
+											}
+										]
+									},
+									"type": "array"
 								}
 							},
+							"required": ["eitherOne"],
 							"type": "object"
 						},
 						{
-							"type": "boolean"
+							"items": {
+								"properties": {
+									"content": {
+										"anyOf": [
+											{
+												"properties": {
+													"category": {
+														"$ref": "#/definitions/PermittedContentElementCategory"
+													},
+													"ignore": {
+														"properties": {
+															"content": {
+																"items": {
+																	"type": "string"
+																},
+																"type": "array"
+															},
+															"descendants": {
+																"enum": [true],
+																"type": "boolean"
+															}
+														},
+														"required": ["content"],
+														"type": "object"
+													}
+												},
+												"required": ["category", "ignore"],
+												"type": "object"
+											},
+											{
+												"properties": {
+													"either": {
+														"items": {
+															"anyOf": [
+																{
+																	"properties": {
+																		"category": {
+																			"$ref": "#/definitions/PermittedContentElementCategory"
+																		},
+																		"ignore": {
+																			"properties": {
+																				"content": {
+																					"items": {
+																						"type": "string"
+																					},
+																					"type": "array"
+																				},
+																				"descendants": {
+																					"enum": [true],
+																					"type": "boolean"
+																				}
+																			},
+																			"required": ["content"],
+																			"type": "object"
+																		}
+																	},
+																	"required": ["category", "ignore"],
+																	"type": "object"
+																},
+																{
+																	"type": "string"
+																}
+															]
+														},
+														"type": "array"
+													}
+												},
+												"required": ["either"],
+												"type": "object"
+											},
+											{
+												"properties": {
+													"eitherOne": {
+														"items": {
+															"anyOf": [
+																{
+																	"properties": {
+																		"category": {
+																			"$ref": "#/definitions/PermittedContentElementCategory"
+																		},
+																		"ignore": {
+																			"properties": {
+																				"content": {
+																					"items": {
+																						"type": "string"
+																					},
+																					"type": "array"
+																				},
+																				"descendants": {
+																					"enum": [true],
+																					"type": "boolean"
+																				}
+																			},
+																			"required": ["content"],
+																			"type": "object"
+																		}
+																	},
+																	"required": ["category", "ignore"],
+																	"type": "object"
+																},
+																{
+																	"type": "string"
+																}
+															]
+														},
+														"type": "array"
+													}
+												},
+												"required": ["eitherOne"],
+												"type": "object"
+											},
+											{
+												"type": "string"
+											}
+										]
+									},
+									"count": {
+										"enum": ["one", "one-or-more", "zero-or-more", "zero-or-one"],
+										"type": "string"
+									}
+								},
+								"required": ["content", "count"],
+								"type": "object"
+							},
+							"type": "array"
+						},
+						{
+							"type": ["string", "boolean"]
 						}
 					]
 				},
@@ -168,21 +320,57 @@
 					"anyOf": [
 						{
 							"properties": {
+								"category": {
+									"$ref": "#/definitions/PermittedContentElementCategory"
+								},
+								"ignore": {
+									"properties": {
+										"content": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"descendants": {
+											"enum": [true],
+											"type": "boolean"
+										}
+									},
+									"required": ["content"],
+									"type": "object"
+								}
+							},
+							"required": ["category", "ignore"],
+							"type": "object"
+						},
+						{
+							"properties": {
 								"either": {
 									"items": {
 										"anyOf": [
 											{
 												"properties": {
 													"category": {
-														"$ref": "#/definitions/ElementCategory"
+														"$ref": "#/definitions/PermittedContentElementCategory"
 													},
 													"ignore": {
-														"items": {
-															"type": "string"
+														"properties": {
+															"content": {
+																"items": {
+																	"type": "string"
+																},
+																"type": "array"
+															},
+															"descendants": {
+																"enum": [true],
+																"type": "boolean"
+															}
 														},
-														"type": "array"
+														"required": ["content"],
+														"type": "object"
 													}
 												},
+												"required": ["category", "ignore"],
 												"type": "object"
 											},
 											{
@@ -193,73 +381,203 @@
 									"type": "array"
 								}
 							},
+							"required": ["either"],
 							"type": "object"
 						},
 						{
 							"properties": {
-								"only": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						},
-						{
-							"properties": {
-								"then": {
-									"properties": {
-										"either": {
-											"items": {
-												"anyOf": [
-													{
+								"eitherOne": {
+									"items": {
+										"anyOf": [
+											{
+												"properties": {
+													"category": {
+														"$ref": "#/definitions/PermittedContentElementCategory"
+													},
+													"ignore": {
 														"properties": {
-															"category": {
-																"$ref": "#/definitions/ElementCategory"
-															},
-															"ignore": {
+															"content": {
 																"items": {
 																	"type": "string"
 																},
 																"type": "array"
+															},
+															"descendants": {
+																"enum": [true],
+																"type": "boolean"
 															}
 														},
+														"required": ["content"],
 														"type": "object"
-													},
-													{
-														"type": "string"
 													}
-												]
+												},
+												"required": ["category", "ignore"],
+												"type": "object"
 											},
-											"type": "array"
-										}
-									},
-									"type": "object"
-								},
-								"zeroOrMore": {
-									"anyOf": [
-										{
-											"items": {
+											{
 												"type": "string"
-											},
-											"type": "array"
-										},
-										{
-											"type": "string"
-										}
-									]
+											}
+										]
+									},
+									"type": "array"
 								}
 							},
+							"required": ["eitherOne"],
 							"type": "object"
 						},
 						{
-							"type": "boolean"
+							"items": {
+								"properties": {
+									"content": {
+										"anyOf": [
+											{
+												"properties": {
+													"category": {
+														"$ref": "#/definitions/PermittedContentElementCategory"
+													},
+													"ignore": {
+														"properties": {
+															"content": {
+																"items": {
+																	"type": "string"
+																},
+																"type": "array"
+															},
+															"descendants": {
+																"enum": [true],
+																"type": "boolean"
+															}
+														},
+														"required": ["content"],
+														"type": "object"
+													}
+												},
+												"required": ["category", "ignore"],
+												"type": "object"
+											},
+											{
+												"properties": {
+													"either": {
+														"items": {
+															"anyOf": [
+																{
+																	"properties": {
+																		"category": {
+																			"$ref": "#/definitions/PermittedContentElementCategory"
+																		},
+																		"ignore": {
+																			"properties": {
+																				"content": {
+																					"items": {
+																						"type": "string"
+																					},
+																					"type": "array"
+																				},
+																				"descendants": {
+																					"enum": [true],
+																					"type": "boolean"
+																				}
+																			},
+																			"required": ["content"],
+																			"type": "object"
+																		}
+																	},
+																	"required": ["category", "ignore"],
+																	"type": "object"
+																},
+																{
+																	"type": "string"
+																}
+															]
+														},
+														"type": "array"
+													}
+												},
+												"required": ["either"],
+												"type": "object"
+											},
+											{
+												"properties": {
+													"eitherOne": {
+														"items": {
+															"anyOf": [
+																{
+																	"properties": {
+																		"category": {
+																			"$ref": "#/definitions/PermittedContentElementCategory"
+																		},
+																		"ignore": {
+																			"properties": {
+																				"content": {
+																					"items": {
+																						"type": "string"
+																					},
+																					"type": "array"
+																				},
+																				"descendants": {
+																					"enum": [true],
+																					"type": "boolean"
+																				}
+																			},
+																			"required": ["content"],
+																			"type": "object"
+																		}
+																	},
+																	"required": ["category", "ignore"],
+																	"type": "object"
+																},
+																{
+																	"type": "string"
+																}
+															]
+														},
+														"type": "array"
+													}
+												},
+												"required": ["eitherOne"],
+												"type": "object"
+											},
+											{
+												"type": "string"
+											}
+										]
+									},
+									"count": {
+										"enum": ["one", "one-or-more", "zero-or-more", "zero-or-one"],
+										"type": "string"
+									}
+								},
+								"required": ["content", "count"],
+								"type": "object"
+							},
+							"type": "array"
+						},
+						{
+							"type": ["string", "boolean"]
 						}
 					]
 				}
 			},
+			"required": ["if", "then"],
 			"type": "object"
 		},
 		"ElementCategory": {
 			"description": "Element Category",
+			"enum": [
+				"embedded",
+				"flow",
+				"heading",
+				"interactive",
+				"metadata",
+				"palpable",
+				"phrasing",
+				"script-supporting",
+				"sectioning",
+				"transparent"
+			],
+			"type": "string"
+		},
+		"PermittedContentElementCategory": {
 			"enum": [
 				"embedded",
 				"flow",
@@ -310,6 +628,7 @@
 								"$ref": "#/definitions/ARIAAttributeValue"
 							}
 						},
+						"required": ["name", "type", "value"],
 						"type": "object"
 					},
 					"type": "array"
@@ -346,6 +665,7 @@
 								"$ref": "#/definitions/AttributeValue"
 							}
 						},
+						"required": ["category", "description", "name", "value"],
 						"type": "object"
 					},
 					"type": "array"
@@ -376,6 +696,7 @@
 								"type": "array"
 							}
 						},
+						"required": ["description", "generalization", "name", "ownedAttribute"],
 						"type": "object"
 					},
 					"type": "array"
@@ -423,6 +744,7 @@
 													"$ref": "#/definitions/AttributeValue"
 												}
 											},
+											"required": ["category", "description", "name", "value"],
 											"type": "object"
 										},
 										{
@@ -504,6 +826,7 @@
 										"type": "string"
 									}
 								},
+								"required": ["alt"],
 								"type": "object"
 							},
 							{
@@ -538,6 +861,7 @@
 										]
 									}
 								},
+								"required": ["endTag", "startTag"],
 								"type": "object"
 							},
 							{
@@ -554,21 +878,57 @@
 								"anyOf": [
 									{
 										"properties": {
+											"category": {
+												"$ref": "#/definitions/PermittedContentElementCategory"
+											},
+											"ignore": {
+												"properties": {
+													"content": {
+														"items": {
+															"type": "string"
+														},
+														"type": "array"
+													},
+													"descendants": {
+														"enum": [true],
+														"type": "boolean"
+													}
+												},
+												"required": ["content"],
+												"type": "object"
+											}
+										},
+										"required": ["category", "ignore"],
+										"type": "object"
+									},
+									{
+										"properties": {
 											"either": {
 												"items": {
 													"anyOf": [
 														{
 															"properties": {
 																"category": {
-																	"$ref": "#/definitions/ElementCategory"
+																	"$ref": "#/definitions/PermittedContentElementCategory"
 																},
 																"ignore": {
-																	"items": {
-																		"type": "string"
+																	"properties": {
+																		"content": {
+																			"items": {
+																				"type": "string"
+																			},
+																			"type": "array"
+																		},
+																		"descendants": {
+																			"enum": [true],
+																			"type": "boolean"
+																		}
 																	},
-																	"type": "array"
+																	"required": ["content"],
+																	"type": "object"
 																}
 															},
+															"required": ["category", "ignore"],
 															"type": "object"
 														},
 														{
@@ -579,68 +939,182 @@
 												"type": "array"
 											}
 										},
+										"required": ["either"],
 										"type": "object"
 									},
 									{
 										"properties": {
-											"only": {
-												"type": "string"
-											}
-										},
-										"type": "object"
-									},
-									{
-										"properties": {
-											"then": {
-												"properties": {
-													"either": {
-														"items": {
-															"anyOf": [
-																{
+											"eitherOne": {
+												"items": {
+													"anyOf": [
+														{
+															"properties": {
+																"category": {
+																	"$ref": "#/definitions/PermittedContentElementCategory"
+																},
+																"ignore": {
 																	"properties": {
-																		"category": {
-																			"$ref": "#/definitions/ElementCategory"
-																		},
-																		"ignore": {
+																		"content": {
 																			"items": {
 																				"type": "string"
 																			},
 																			"type": "array"
+																		},
+																		"descendants": {
+																			"enum": [true],
+																			"type": "boolean"
 																		}
 																	},
+																	"required": ["content"],
 																	"type": "object"
-																},
-																{
-																	"type": "string"
 																}
-															]
+															},
+															"required": ["category", "ignore"],
+															"type": "object"
 														},
-														"type": "array"
-													}
-												},
-												"type": "object"
-											},
-											"zeroOrMore": {
-												"anyOf": [
-													{
-														"items": {
+														{
 															"type": "string"
-														},
-														"type": "array"
-													},
-													{
-														"type": "string"
-													}
-												]
+														}
+													]
+												},
+												"type": "array"
 											}
 										},
+										"required": ["eitherOne"],
 										"type": "object"
+									},
+									{
+										"items": {
+											"properties": {
+												"content": {
+													"anyOf": [
+														{
+															"properties": {
+																"category": {
+																	"$ref": "#/definitions/PermittedContentElementCategory"
+																},
+																"ignore": {
+																	"properties": {
+																		"content": {
+																			"items": {
+																				"type": "string"
+																			},
+																			"type": "array"
+																		},
+																		"descendants": {
+																			"enum": [true],
+																			"type": "boolean"
+																		}
+																	},
+																	"required": ["content"],
+																	"type": "object"
+																}
+															},
+															"required": ["category", "ignore"],
+															"type": "object"
+														},
+														{
+															"properties": {
+																"either": {
+																	"items": {
+																		"anyOf": [
+																			{
+																				"properties": {
+																					"category": {
+																						"$ref": "#/definitions/PermittedContentElementCategory"
+																					},
+																					"ignore": {
+																						"properties": {
+																							"content": {
+																								"items": {
+																									"type": "string"
+																								},
+																								"type": "array"
+																							},
+																							"descendants": {
+																								"enum": [true],
+																								"type": "boolean"
+																							}
+																						},
+																						"required": ["content"],
+																						"type": "object"
+																					}
+																				},
+																				"required": ["category", "ignore"],
+																				"type": "object"
+																			},
+																			{
+																				"type": "string"
+																			}
+																		]
+																	},
+																	"type": "array"
+																}
+															},
+															"required": ["either"],
+															"type": "object"
+														},
+														{
+															"properties": {
+																"eitherOne": {
+																	"items": {
+																		"anyOf": [
+																			{
+																				"properties": {
+																					"category": {
+																						"$ref": "#/definitions/PermittedContentElementCategory"
+																					},
+																					"ignore": {
+																						"properties": {
+																							"content": {
+																								"items": {
+																									"type": "string"
+																								},
+																								"type": "array"
+																							},
+																							"descendants": {
+																								"enum": [true],
+																								"type": "boolean"
+																							}
+																						},
+																						"required": ["content"],
+																						"type": "object"
+																					}
+																				},
+																				"required": ["category", "ignore"],
+																				"type": "object"
+																			},
+																			{
+																				"type": "string"
+																			}
+																		]
+																	},
+																	"type": "array"
+																}
+															},
+															"required": ["eitherOne"],
+															"type": "object"
+														},
+														{
+															"type": "string"
+														}
+													]
+												},
+												"count": {
+													"enum": ["one", "one-or-more", "zero-or-more", "zero-or-one"],
+													"type": "string"
+												}
+											},
+											"required": ["content", "count"],
+											"type": "object"
+										},
+										"type": "array"
 									},
 									{
 										"$ref": "#/definitions/ConditionalPermittedContent"
 									},
 									{
-										"type": "boolean"
+										"type": ["string", "boolean"]
 									}
 								]
 							},
@@ -648,6 +1122,7 @@
 								"type": "string"
 							}
 						},
+						"required": ["content", "summary"],
 						"type": "object"
 					},
 					"permittedRoles": {
@@ -661,13 +1136,24 @@
 								"type": "string"
 							}
 						},
+						"required": ["roles", "summary"],
 						"type": "object"
 					}
 				},
+				"required": [
+					"attributes",
+					"categories",
+					"cite",
+					"name",
+					"omittion",
+					"permittedContent",
+					"permittedRoles"
+				],
 				"type": "object"
 			},
 			"type": "array"
 		}
 	},
+	"required": ["specs"],
 	"type": "object"
 }

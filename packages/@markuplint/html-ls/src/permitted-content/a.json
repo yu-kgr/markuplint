@@ -3,7 +3,10 @@
 		"#transparent",
 		{
 			"category": "flow",
-			"ignore": ["#interactive"]
+			"ignore": {
+				"content": ["#interactive"],
+				"descendants": true
+			}
 		},
 		"#phrasing"
 	]

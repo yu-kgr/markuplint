@@ -1,6 +1,12 @@
-{
-	"zeroOrMore": "param",
-	"then": {
-		"either": ["#transparent"]
+[
+	{
+		"count": "zero-or-more",
+		"content": "param"
+	},
+	{
+		"count": "zero-or-more",
+		"content": {
+			"either": ["#transparent"]
+		}
 	}
-}
+]

@@ -1,3 +1,6 @@
-{
-	"zeroOrMore": "li"
-}
+[
+	{
+		"count": "zero-or-more",
+		"content": "li"
+	}
+]

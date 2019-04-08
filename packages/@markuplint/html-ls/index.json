@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/markuplint/markuplint/next/packages/%40markuplint/ml-spec/schema.json",
+	"$schema": "../ml-spec/schema.json",
 	"cites": [
 		"https://developer.mozilla.org/en-US/docs/Web/HTML/Element",
 		"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements",
@@ -1228,7 +1228,10 @@
 						"#transparent",
 						{
 							"category": "flow",
-							"ignore": ["#interactive"]
+							"ignore": {
+								"content": ["#interactive"],
+								"descendants": true
+							}
 						},
 						"#phrasing"
 					]
@@ -1335,9 +1338,7 @@
 			"categories": ["flow", "phrasing", "palpable"],
 			"permittedContent": {
 				"summary": "Phrasing content",
-				"content": {
-					"only": "#phrasing"
-				}
+				"content": "#phrasing"
 			},
 			"permittedRoles": {
 				"summary": "Any",
@@ -1374,7 +1375,10 @@
 					"either": [
 						{
 							"category": "flow",
-							"ignore": ["address", "#heading", "#sectioning", "header", "footer"]
+							"ignore": {
+								"content": ["address", "#heading", "#sectioning", "header", "footer"],
+								"descendants": true
+							}
 						}
 					]
 				}
@@ -1394,12 +1398,18 @@
 			"categories": ["flow", "phrasing", "embedded", "interactive", "palpable"],
 			"permittedContent": {
 				"summary": "Zero or more <param> elements, then transparent.",
-				"content": {
-					"zeroOrMore": "param",
-					"then": {
-						"either": ["#transparent"]
+				"content": [
+					{
+						"count": "zero-or-more",
+						"content": "param"
+					},
+					{
+						"count": "zero-or-more",
+						"content": {
+							"either": ["#transparent"]
+						}
 					}
-				}
+				]
 			},
 			"permittedRoles": {
 				"summary": "",
@@ -1623,9 +1633,7 @@
 			"categories": ["flow", "sectioning", "palpable"],
 			"permittedContent": {
 				"summary": "Flow content.",
-				"content": {
-					"either": ["#flow"]
-				}
+				"content": "#flow"
 			},
 			"permittedRoles": {
 				"summary": "application, document, feed, main, presentation, region",
@@ -1641,9 +1649,7 @@
 			"categories": ["flow", "sectioning", "palpable"],
 			"permittedContent": {
 				"summary": "Flow content.",
-				"content": {
-					"either": ["#flow"]
-				}
+				"content": "#flow"
 			},
 			"permittedRoles": {
 				"summary": "feed, note, presentation, region, search",
@@ -1663,28 +1669,50 @@
 					"if": {
 						"hasAttr": "src"
 					},
-					"then": {
-						"zeroOrMore": "track",
-						"then": {
-							"either": [
-								{
-									"category": "transparent",
-									"ignore": ["track", "audio", "video"]
-								}
-							]
+					"then": [
+						{
+							"count": "zero-or-more",
+							"content": "track"
+						},
+						{
+							"count": "zero-or-more",
+							"content": {
+								"either": [
+									{
+										"category": "transparent",
+										"ignore": {
+											"content": ["audio", "video"],
+											"descendants": true
+										}
+									}
+								]
+							}
 						}
-					},
-					"else": {
-						"zeroOrMore": ["source", "track"],
-						"then": {
-							"either": [
-								{
-									"category": "transparent",
-									"ignore": ["source", "track", "audio", "video"]
-								}
-							]
+					],
+					"else": [
+						{
+							"count": "zero-or-more",
+							"content": "source"
+						},
+						{
+							"count": "zero-or-more",
+							"content": "track"
+						},
+						{
+							"count": "zero-or-more",
+							"content": {
+								"either": [
+									{
+										"category": "transparent",
+										"ignore": {
+											"content": ["audio", "video"],
+											"descendants": true
+										}
+									}
+								]
+							}
 						}
-					}
+					]
 				}
 			},
 			"permittedRoles": {
@@ -6258,9 +6286,12 @@
 			"categories": ["flow", "palpable"],
 			"permittedContent": {
 				"summary": "zero or more <li> elements, which in turn often contain nested <ol> or <ul> elements.",
-				"content": {
-					"zeroOrMore": "li"
-				}
+				"content": [
+					{
+						"count": "zero-or-more",
+						"content": "li"
+					}
+				]
 			},
 			"permittedRoles": {
 				"summary": "directory, group, listbox, menu, menubar, radiogroup, tablist, toolbar, tree, presentation",
