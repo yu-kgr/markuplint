@@ -1,5 +1,5 @@
 import { ConditionalPermittedContent, PermittedContent } from '@markuplint/ml-spec';
-import { Element, Result, createRule } from '@markuplint/ml-core';
+import { Result, createRule } from '@markuplint/ml-core';
 
 export default createRule({
 	name: 'permitted-contents',
@@ -30,58 +30,66 @@ export default createRule({
 							raw: element.nodeName,
 						});
 					}
+				} else if (typeof content === 'string') {
+					if (content[0] === '#') {
+						// i.e. Element category name
+						const permittedContent = content;
+						if (element.children.some(el => !el.matchCategoryOrTagName(permittedContent))) {
+							reports.push({
+								severity: element.rule.severity,
+								message: `${element.nodeName}要素は${permittedContent}を許可しません`,
+								line: element.startLine,
+								col: element.startCol + 1,
+								raw: element.nodeName,
+							});
+						}
+					} else {
+						// i.e. Element tag name
+						if (element.children.some(el => el.nodeName.toLowerCase() !== content.toLowerCase())) {
+							reports.push({
+								severity: element.rule.severity,
+								message: `${element.nodeName}要素は${content}を許可しません`,
+								line: element.startLine,
+								col: element.startCol + 1,
+								raw: element.nodeName,
+							});
+						}
+					}
+				} else if ('ignore' in content) {
+					// i.e. Element category partial
+					content;
 				} else if ('either' in content) {
-					for (const el of content.either) {
-						if (typeof el === 'string') {
-							el;
-						}
+					// i.e. Either elements
+					for (const eitherContent of content.either) {
+						eitherContent;
 					}
-				} else if ('only' in content) {
-					const permittedContent = content.only;
-					if (element.children.some(el => !el.matchCategoryOrTagName(permittedContent))) {
-						reports.push({
-							severity: element.rule.severity,
-							message: `${element.nodeName}要素は${permittedContent}を許可しません`,
-							line: element.startLine,
-							col: element.startCol + 1,
-							raw: element.nodeName,
-						});
+				} else if ('eitherOne' in content) {
+					// i.e. Either one elements
+					for (const eitherOneContent of content.eitherOne) {
+						eitherOneContent;
 					}
-				} else if ('zeroOrMore' in content) {
-					const permittedContents = Array.isArray(content.zeroOrMore)
-						? content.zeroOrMore
-						: [content.zeroOrMore];
-
-					let unpermittedElement: Element<null, null> | void;
-
-					check: for (const child of element.children) {
-						for (const permittedContent of permittedContents) {
-							if (!child.matchCategoryOrTagName(permittedContent)) {
-								unpermittedElement = child;
-								break check;
-							}
-						}
-					}
-					if (unpermittedElement) {
-						reports.push({
-							severity: element.rule.severity,
-							message: `${element.nodeName}要素は${unpermittedElement.nodeName}要素を許可しません`,
-							line: unpermittedElement.startLine,
-							col: unpermittedElement.startCol + 1,
-							raw: unpermittedElement.nodeName,
-						});
-					}
+				} else if (Array.isArray(content)) {
+					// i.e. Ordered contents
+					// let unpermittedElement: Element<null, null> | void;
+					// check: for (const child of element.children) {
+					// 	for (const permittedContent of permittedContents) {
+					// 		if (!child.matchCategoryOrTagName(permittedContent)) {
+					// 			unpermittedElement = child;
+					// 			break check;
+					// 		}
+					// 	}
+					// }
+					// if (unpermittedElement) {
+					// 	reports.push({
+					// 		severity: element.rule.severity,
+					// 		message: `${element.nodeName}要素は${unpermittedElement.nodeName}要素を許可しません`,
+					// 		line: unpermittedElement.startLine,
+					// 		col: unpermittedElement.startCol + 1,
+					// 		raw: unpermittedElement.nodeName,
+					// 	});
+					// }
 				}
 			}
-			// if (spec && (spec.obsolete || spec.deprecated || spec.nonStandard)) {
-			// 	reports.push({
-			// 		severity: node.rule.severity,
-			// 		message,
-			// 		line: node.startLine,
-			// 		col: node.startCol + 1,
-			// 		raw: node.nodeName,
-			// 	});
-			// }
 		});
 		return reports;
 	},
