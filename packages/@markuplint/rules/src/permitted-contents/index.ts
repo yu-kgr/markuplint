@@ -1,5 +1,10 @@
-import { ConditionalPermittedContent, PermittedContent } from '@markuplint/ml-spec';
-import { Result, createRule } from '@markuplint/ml-core';
+import {
+	ConditionalPermittedContent,
+	PermittedContent,
+	PermittedContentElementCategory,
+	PermittedContentElementCategoryPartial,
+} from '@markuplint/ml-spec';
+import { Element, Result, createRule } from '@markuplint/ml-core';
 
 export default createRule({
 	name: 'permitted-contents',
@@ -7,96 +12,184 @@ export default createRule({
 	defaultOptions: null,
 	async verify(document, messages) {
 		const reports: Result[] = [];
-		await document.walkOn('Element', async element => {
-			const content = element.permittedContent;
+		await document.walkOn('Element', async el => {
+			const content = el.permittedContent;
 			if (content == null) {
 				return;
 			}
-			if (isConditinalContent(content)) {
-				content;
-			} else {
-				content;
-				if (content === true) {
-					// i.e. Allow all element
-					return;
-				} else if (content === false) {
-					// i.e. Void element
-					if (element.children.length) {
-						reports.push({
-							severity: element.rule.severity,
-							message: `${element.nodeName}は空要素なので、要素を内包することはできません`,
-							line: element.startLine,
-							col: element.startCol + 1,
-							raw: element.nodeName,
-						});
-					}
-				} else if (typeof content === 'string') {
-					if (content[0] === '#') {
-						// i.e. Element category name
-						const permittedContent = content;
-						if (element.children.some(el => !el.matchCategoryOrTagName(permittedContent))) {
-							reports.push({
-								severity: element.rule.severity,
-								message: `${element.nodeName}要素は${permittedContent}を許可しません`,
-								line: element.startLine,
-								col: element.startCol + 1,
-								raw: element.nodeName,
-							});
-						}
-					} else {
-						// i.e. Element tag name
-						if (element.children.some(el => el.nodeName.toLowerCase() !== content.toLowerCase())) {
-							reports.push({
-								severity: element.rule.severity,
-								message: `${element.nodeName}要素は${content}を許可しません`,
-								line: element.startLine,
-								col: element.startCol + 1,
-								raw: element.nodeName,
-							});
-						}
-					}
-				} else if ('ignore' in content) {
-					// i.e. Element category partial
-					content;
-				} else if ('either' in content) {
-					// i.e. Either elements
-					for (const eitherContent of content.either) {
-						eitherContent;
-					}
-				} else if ('eitherOne' in content) {
-					// i.e. Either one elements
-					for (const eitherOneContent of content.eitherOne) {
-						eitherOneContent;
-					}
-				} else if (Array.isArray(content)) {
-					// i.e. Ordered contents
-					// let unpermittedElement: Element<null, null> | void;
-					// check: for (const child of element.children) {
-					// 	for (const permittedContent of permittedContents) {
-					// 		if (!child.matchCategoryOrTagName(permittedContent)) {
-					// 			unpermittedElement = child;
-					// 			break check;
-					// 		}
-					// 	}
-					// }
-					// if (unpermittedElement) {
-					// 	reports.push({
-					// 		severity: element.rule.severity,
-					// 		message: `${element.nodeName}要素は${unpermittedElement.nodeName}要素を許可しません`,
-					// 		line: unpermittedElement.startLine,
-					// 		col: unpermittedElement.startCol + 1,
-					// 		raw: unpermittedElement.nodeName,
-					// 	});
-					// }
+			const midResult = verify(el, content);
+			if (midResult) {
+				let message = 'error';
+				switch (midResult.errorType) {
+				case 'void': {
+					message = `${el.nodeName}は空要素なので、要素を内包することはできません`;
+					break;
 				}
+				case 'element': {
+					message = `${el.nodeName}要素は${midResult.unpermittedName}を許可しません`;
+					break;
+				}
+				case 'category': {
+					message = `${el.nodeName}要素は${midResult.unpermittedName}を許可しません`;
+					break;
+				}
+				}
+				reports.push({
+					severity: el.rule.severity,
+					message,
+					line: el.startLine,
+					col: el.startCol + 1,
+					raw: el.nodeName,
+				});
 			}
 		});
 		return reports;
 	},
 });
 
+type Elem = Element<null, null>;
+
+type MiddleResult = {
+	errorType: 'void' | 'element' | 'category';
+	unpermittedName?: string;
+};
+
 function isConditinalContent(
 	content: PermittedContent | ConditionalPermittedContent,
 ): content is ConditionalPermittedContent {
 	return typeof content === 'object' && 'if' in content;
+}
+
+function verify(el: Elem, content: PermittedContent | ConditionalPermittedContent): MiddleResult | null {
+	if (isConditinalContent(content)) {
+		content;
+	} else {
+		content;
+		if (content === true) {
+			// i.e. Allow all element
+			return null;
+		} else if (content === false) {
+			// i.e. Void element
+			return verifyEmpty(el);
+		} else if (typeof content === 'string') {
+			if (content[0] === '#') {
+				// i.e. Element category name
+				const category = content.replace('#', '') as PermittedContentElementCategory;
+				return verifyCategory(el.children, category);
+			} else {
+				// i.e. Element tag name
+				return verifyTagName(el.children, content);
+			}
+		} else if ('ignore' in content) {
+			// i.e. Element category partial
+			return verifyCategoryPartial(el, content);
+		} else if ('either' in content) {
+			// i.e. Either elements
+			for (const eitherContent of content.either) {
+				const res = verify(el, eitherContent);
+				if (res) {
+					return res;
+				}
+			}
+			return null;
+		} else if ('eitherOne' in content) {
+			// i.e. Either one elements
+			// TODO
+			return null;
+		} else if (Array.isArray(content)) {
+			// i.e. Ordered contents
+			// TODO
+			return null;
+		}
+		return null;
+	}
+	return null;
+}
+
+function isNotEmpty(el: Elem) {
+	return el.children.length;
+}
+
+function getPermittedElementsByCategoryIn(elements: Elem[], category: PermittedContentElementCategory) {
+	return elements.filter(el => el.matchCategory(category));
+}
+
+function getHeresyElementsByCategoryIn(elements: Elem[], category: PermittedContentElementCategory) {
+	return elements.filter(el => !el.matchCategory(category));
+}
+
+function getUnmatchedElementsByTagName(elements: Elem[], tagName: string) {
+	return elements.filter(el => el.nodeName.toLowerCase() !== tagName.toLowerCase());
+}
+
+function verifyEmpty(el: Elem): MiddleResult | null {
+	if (isNotEmpty(el)) {
+		return {
+			errorType: 'void',
+		};
+	}
+	return null;
+}
+
+function verifyTagName(elements: Elem[], tagName: string): MiddleResult | null {
+	const unmatchedElements = getUnmatchedElementsByTagName(elements, tagName);
+	if (unmatchedElements.length) {
+		return {
+			errorType: 'element',
+			unpermittedName: unmatchedElements[0].nodeName,
+		};
+	}
+	return null;
+}
+
+function verifyCategory(elements: Elem[], category: PermittedContentElementCategory): MiddleResult | null {
+	const heresies = getHeresyElementsByCategoryIn(elements, category);
+	if (heresies.length) {
+		return {
+			errorType: 'category',
+			unpermittedName: heresies[0].nodeName,
+		};
+	}
+	return null;
+}
+
+function verifyCategoryPartial(el: Elem, content: PermittedContentElementCategoryPartial): MiddleResult | null {
+	const category = content.category.replace('#', '') as PermittedContentElementCategory;
+	if (content.ignore.descendants) {
+		const res = verifyCategory(el.descendants, category);
+		if (res) {
+			return res;
+		}
+	} else {
+		const res = verifyCategory(el.children, category);
+		if (res) {
+			return res;
+		}
+	}
+	const permittedElements = content.ignore.descendants
+		? getPermittedElementsByCategoryIn(el.descendants, category)
+		: getPermittedElementsByCategoryIn(el.children, category);
+	for (const permittedElement of permittedElements) {
+		for (const ignore of content.ignore.content) {
+			if (ignore[0] === '#') {
+				// i.e. Element category name
+				const ignoreCat = ignore.replace('#', '') as PermittedContentElementCategory;
+				if (permittedElement.matchCategory(ignoreCat)) {
+					return {
+						errorType: 'category',
+						unpermittedName: permittedElement.nodeName,
+					};
+				}
+			} else {
+				// i.e. Element tag name
+				if (permittedElement.nodeName.toLowerCase() === ignore.toLowerCase()) {
+					return {
+						errorType: 'element',
+						unpermittedName: permittedElement.nodeName,
+					};
+				}
+			}
+		}
+	}
+	return null;
 }

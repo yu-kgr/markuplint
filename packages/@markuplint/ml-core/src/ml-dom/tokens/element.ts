@@ -100,8 +100,12 @@ export default class MLDOMElement<T extends RuleConfigValue, O = null> extends M
 		return this._spec ? this._spec.permittedContent.content : null;
 	}
 
+	public get descendants() {
+		return this._getDescendantElements();
+	}
+
 	public getElementsByTagName(tagName: string): MLDOMElement<T, O>[] {
-		return this._getDescendantElements().filter(el => el.nodeName === tagName);
+		return this.descendants.filter(el => el.nodeName.toLowerCase() === tagName.toLowerCase());
 	}
 
 	public getAttributeToken(attrName: string) {
