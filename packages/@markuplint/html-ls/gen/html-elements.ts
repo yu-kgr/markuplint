@@ -57,11 +57,11 @@ export async function getHTMLElement(link: string) {
 		nonStandard,
 		categories,
 		permittedContent: {
-			summary: permittedContent,
+			summary: removeSpace(permittedContent),
 			content: setPermittedContent(name),
 		},
 		permittedRoles: {
-			summary: permittedRoles,
+			summary: removeSpace(permittedRoles),
 			roles: {},
 		},
 		omittion: false,
@@ -148,4 +148,8 @@ async function getHTMLElementLinks() {
 		.map(el => `https://developer.mozilla.org${$(el).attr('href')}`);
 
 	return lists;
+}
+
+function removeSpace(str: string) {
+	return str.replace(/[\r\n\s]+/g, ' ').trim();
 }

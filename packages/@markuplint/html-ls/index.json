@@ -1,5 +1,5 @@
 {
-	"$schema": "../ml-spec/schema.json",
+	"$schema": "./ml-specs.schema.json",
 	"cites": [
 		"https://developer.mozilla.org/en-US/docs/Web/HTML/Element",
 		"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements",
@@ -1664,7 +1664,7 @@
 			"description": "The HTML <audio> element is used to embed sound content in documents. It may contain one or more audio sources, represented using the src attribute or the <source> element: the browser will choose the most suitable one. It can also be the destination for streamed media, using a MediaStream.",
 			"categories": ["flow", "phrasing", "embedded", "interactive", "palpable"],
 			"permittedContent": {
-				"summary": "If the element has a src attribute: zero or more <track> elements followed by transparent content that contains no <audio> or <video> media elements.\n    Else: zero or more <source> elements followed by zero or more <track> elements followed by transparent content that contains no <audio> or <video> media elements.",
+				"summary": "If the element has a src attribute: zero or more <track> elements followed by transparent content that contains no <audio> or <video> media elements. Else: zero or more <source> elements followed by zero or more <track> elements followed by transparent content that contains no <audio> or <video> media elements.",
 				"content": {
 					"if": {
 						"hasAttr": "src"
@@ -2504,7 +2504,7 @@
 			"description": "",
 			"categories": [],
 			"permittedContent": {
-				"summary": "If the span attribute is present: none, it is an empty element.\n    If the attribute is not present: zero or more <col> element",
+				"summary": "If the span attribute is present: none, it is an empty element. If the attribute is not present: zero or more <col> element",
 				"content": true
 			},
 			"permittedRoles": {
@@ -2838,7 +2838,7 @@
 			"description": "The HTML Content Division element (<div>) is the generic container for flow content. It has no effect on the content or layout until styled using CSS.",
 			"categories": ["flow", "palpable"],
 			"permittedContent": {
-				"summary": "Flow content.\n    Or (in WHATWG HTML): If the parent is a <dl> element: one or more <dt> elements followed by one or more <dd> elements, optionally intermixed with <script> and <template> elements.",
+				"summary": "Flow content. Or (in WHATWG HTML): If the parent is a <dl> element: one or more <dt> elements followed by one or more <dd> elements, optionally intermixed with <script> and <template> elements.",
 				"content": true
 			},
 			"permittedRoles": {
@@ -2854,7 +2854,7 @@
 			"description": "",
 			"categories": ["flow", "palpable"],
 			"permittedContent": {
-				"summary": "\n    Either: Zero or more groups each consisting of one or more <dt> elements followed by one or more <dd> elements, optionally intermixed with <script> and <template> elements.\n     Or: One or more <div> elements, optionally intermixed with <script> and <template> elements.\n   ",
+				"summary": "Either: Zero or more groups each consisting of one or more <dt> elements followed by one or more <dd> elements, optionally intermixed with <script> and <template> elements. Or: One or more <div> elements, optionally intermixed with <script> and <template> elements.",
 				"content": true
 			},
 			"permittedRoles": {
@@ -3255,7 +3255,7 @@
 			"description": "The HTML <head> element contains machine-readable information (metadata) about the document, like its title, scripts, and style sheets.",
 			"categories": [],
 			"permittedContent": {
-				"summary": "\n    If the document is an <iframe> srcdoc document, or if title information is available from a higher level protocol (like the subject line in HTML email), zero or more elements of metadata content.\n\n    Otherwise, one or more elements of metadata content where exactly one is a <title> element.\n   ",
+				"summary": "If the document is an <iframe> srcdoc document, or if title information is available from a higher level protocol (like the subject line in HTML email), zero or more elements of metadata content. Otherwise, one or more elements of metadata content where exactly one is a <title> element.",
 				"content": true
 			},
 			"permittedRoles": {
@@ -3603,7 +3603,7 @@
 				"content": true
 			},
 			"permittedRoles": {
-				"summary": "\n    \n     type=button: link, menuitem, menuitemcheckbox, menuitemradio, radio, switch, tab\n     type=checkbox: button, menuitemcheckbox, option, switch\n     type=image: link, menuitem, menuitemcheckbox, menuitemradio, radio, switch\n     type=radio: menuitemradio\n     type=color|date|datetime|datetime-local|email|file: None\n     type=hidden|month|number|password|range|reset: None\n     type=search|submit|tel|text|url|week: None\n    \n   ",
+				"summary": "type=button: link, menuitem, menuitemcheckbox, menuitemradio, radio, switch, tab type=checkbox: button, menuitemcheckbox, option, switch type=image: link, menuitem, menuitemcheckbox, menuitemradio, radio, switch type=radio: menuitemradio type=color|date|datetime|datetime-local|email|file: None type=hidden|month|number|password|range|reset: None type=search|submit|tel|text|url|week: None",
 				"roles": {}
 			},
 			"omittion": false,
@@ -4112,7 +4112,7 @@
 			"deprecated": true,
 			"categories": ["flow", "palpable"],
 			"permittedContent": {
-				"summary": "If the element is in the list menu state: flow content, or alternatively, zero or more occurrences of <li>, <script>, and <template>.\n    If the element is in the context menu state: zero or more occurrences, in any order, of <menu> (context menu state only), <menuitem>, <hr>, <script>, and <template>.",
+				"summary": "If the element is in the list menu state: flow content, or alternatively, zero or more occurrences of <li>, <script>, and <template>. If the element is in the context menu state: zero or more occurrences, in any order, of <menu> (context menu state only), <menuitem>, <hr>, <script>, and <template>.",
 				"content": true
 			},
 			"permittedRoles": {
@@ -4436,7 +4436,7 @@
 			"description": "",
 			"categories": ["metadata", "flow", "phrasing"],
 			"permittedContent": {
-				"summary": "When scripting is disabled and when it is a descendant of the <head> element: in any order, zero or more <link> elements, zero or more <style> elements, and zero or more <meta> elements.\n    When scripting is disabled and when it isn't a descendant of the <head> element: any transparent content, but no <noscript> element must be among its descendants.\n    Otherwise: flow content or phrasing content.",
+				"summary": "When scripting is disabled and when it is a descendant of the <head> element: in any order, zero or more <link> elements, zero or more <style> elements, and zero or more <meta> elements. When scripting is disabled and when it isn't a descendant of the <head> element: any transparent content, but no <noscript> element must be among its descendants. Otherwise: flow content or phrasing content.",
 				"content": true
 			},
 			"permittedRoles": {
@@ -5510,7 +5510,7 @@
 			"description": "The HTML <table> element represents tabular data — that is, information presented in a two-dimensional table comprised of rows and columns of cells containing data.",
 			"categories": ["flow"],
 			"permittedContent": {
-				"summary": "\n    \n    In this order:\n    \n     an optional <caption> element,\n     zero or more <colgroup> elements,\n     an optional <thead> element,\n     either one of the following:\n      \n       zero or more <tbody> elements\n       one or more <tr> elements\n      \n     \n     an optional <tfoot> element\n    \n    \n    \n   ",
+				"summary": "In this order: an optional <caption> element, zero or more <colgroup> elements, an optional <thead> element, either one of the following: zero or more <tbody> elements one or more <tr> elements an optional <tfoot> element",
 				"content": true
 			},
 			"permittedRoles": {
@@ -6339,7 +6339,7 @@
 			"description": "The HTML Video element (<video>) embeds a media player which supports video playback into the document. You can use <video> for audio content as well, but the <audio> element may provide a more appropriate user experience.",
 			"categories": ["flow", "phrasing", "embedded", "interactive", "palpable"],
 			"permittedContent": {
-				"summary": "\n    If the element has a src attribute: zero or more <track> elements, followed by transparent content that contains no media elements–that is no <audio> or <video>\n\n    Else: zero or more <source> elements, followed by zero or more <track> elements, followed by transparent content that contains no media elements–that is no <audio> or <video>.\n   ",
+				"summary": "If the element has a src attribute: zero or more <track> elements, followed by transparent content that contains no media elements–that is no <audio> or <video> Else: zero or more <source> elements, followed by zero or more <track> elements, followed by transparent content that contains no media elements–that is no <audio> or <video>.",
 				"content": true
 			},
 			"permittedRoles": {
