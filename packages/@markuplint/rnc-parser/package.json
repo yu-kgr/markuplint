@@ -1,0 +1,13 @@
+{
+	"name": "@markuplint/rnc-parser",
+	"description": "https://markuplint.dev",
+	"version": "1.0.0-alpha.0",
+	"private": true,
+	"scripts": {
+		"build": "pegjs -o lib/parser.js src/grammer.pegjs"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"pegjs": "^0.10.0"
+	}
+}
