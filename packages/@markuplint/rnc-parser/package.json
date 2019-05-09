@@ -4,7 +4,8 @@
 	"version": "1.0.0-alpha.0",
 	"private": true,
 	"scripts": {
-		"build": "pegjs -o lib/parser.js src/grammer.pegjs"
+		"build": "pegjs -o lib/_parser.js src/grammer.pegjs; tsc",
+		"cli": "node lib/resolver.js"
 	},
 	"dependencies": {},
 	"devDependencies": {
