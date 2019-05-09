@@ -5,6 +5,7 @@
 	"private": true,
 	"scripts": {
 		"build": "pegjs -o lib/_parser.js src/grammer.pegjs; tsc",
+		"dev": "tsc --watch",
 		"cli": "node lib/resolver.js"
 	},
 	"dependencies": {},

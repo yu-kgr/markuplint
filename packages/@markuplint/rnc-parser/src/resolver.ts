@@ -1,57 +1,73 @@
-import { Grammer, parse } from './parser';
+import { Ref, Values, parse } from './parser';
+import { readFile, writeFile } from 'fs';
+import { promisify } from 'util';
+import { resolve } from 'path';
 
-const grammers = parse(`
-default namespace = "http://www.w3.org/1999/xhtml"
-# #####################################################################
-##  RELAX NG Schema for HTML 5                                       #
-# #####################################################################
+const asyncReadFlie = promisify(readFile);
 
-  # To validate an HTML 5 document, you must first validate against  #
-  # this schema and then ALSO validate against assertions.sch        #
+// @ts-ignore
+Map.prototype.toJSON = function() {
+	// @ts-ignore
+	return Array.from(this).reduce((sum, [v, k]) => ((sum[v] = k), sum), {});
+};
 
-  ## HTML flavor RELAX NG schemas can only be used after the         #
-  ## document has been transformed to well-formed XML.               #
-  ##   - Insert closing slashes in all empty element tags            #
-  ##   - Insert all optional start and end tags                      #
-  ##   - Add xmlns "http://www.w3.org/1999/xhtml"                    #
-  ##   - Properly escape <script> and <style> CDATA                  #
-  ##   - Parse and transform all HTML-only entities to numeric       #
-  ##     character references                                        #
-  ## Obviously, syntax-checking involving these features cannot be   #
-  ## done by the RELAX NG schema and must be checked, along with the #
-  ## <!DOCTYPE> requirement, by some other application.              #
+asyncReadFlie(resolve(__dirname, '../src/common.rnc'), { encoding: 'utf-8' }).then(rnc => {
+	const grammers = parse(rnc);
 
-# #####################################################################
-## Schema Framework & Parameters
+	const refs: Ref[] = [];
 
-include "common.rnc" {
-	# XHTML flavor #
-		XMLonly = notAllowed
-		HTMLonly = empty
-	# HTML 4 compat #
-		v5only = empty
-	# HTML-serializability #
-		nonHTMLizable = notAllowed
-	# HTML-roundtrippability #
-		nonRoundtrippable = notAllowed
-}
+	for (const grammer of grammers) {
+		switch (grammer.type) {
+			case 'ref': {
+				refs.push(grammer);
+			}
+		}
+	}
 
-# #####################################################################
-## Language Definitions
+	const vars = new Map<string, Values>();
 
-start = html.elem
+	for (const ref of refs) {
+		if (vars.has(ref.variableName.name)) {
+			// TODO: merging
+			return;
+		}
+		vars.set(ref.variableName.name, ref.value);
+	}
 
-include "meta.rnc"
-`);
+	const resolvedVars = new Map<string, Values>();
 
-const variables: Grammer[] = [];
+	resolver(resolvedVars, vars);
 
-for (const grammer of grammers) {
-	switch (grammer.type) {
-		case 'ref': {
-			variables.push(grammer);
+	writeFile(resolve(__dirname, '../src/spec.json'), JSON.stringify(resolvedVars, null, 2), () =>
+		process.stdout.write('🎉 Generated spec.json.'),
+	);
+});
+
+function resolver(input: Map<string, Values>, vars: Map<string, Values>) {
+	for (const [name, values] of vars) {
+		if (Array.isArray(values)) {
+			const newValues = [...values];
+			for (let i = 0; i < values.length; i++) {
+				const value = values[i];
+				if (value && value.type === 'variable') {
+					const rawValue = vars.get(value.name);
+					if (rawValue) {
+						// @ts-ignore
+						newValues[i] = rawValue;
+					}
+				}
+			}
+			input.set(name, newValues);
+		} else if (values.type === 'variable') {
+			const rawValue = vars.get(values.name);
+			if (rawValue) {
+				input.set(name, rawValue);
+			}
+		} else if (values.type === 'element') {
+			resolver(input, values.contents);
+		}
+		} else {
+			input.set(name, values);
 		}
 	}
 }
-
-// console.log(variables);

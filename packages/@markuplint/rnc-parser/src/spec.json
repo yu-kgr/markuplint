@@ -1,0 +1,1010 @@
+{
+  "XMLonly": {
+    "type": "keyword",
+    "value": "empty",
+    "required": "required"
+  },
+  "HTMLonly": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "v5only": {
+    "type": "keyword",
+    "value": "empty",
+    "required": "required"
+  },
+  "nonRoundtrippable": {
+    "type": "keyword",
+    "value": "empty",
+    "required": "required"
+  },
+  "nonHTMLizable": {
+    "type": "keyword",
+    "value": "empty",
+    "required": "required"
+  },
+  "common.attr.anything": {
+    "type": "attribute",
+    "name": "*",
+    "value": {
+      "type": "keyword",
+      "value": "text",
+      "required": "required"
+    },
+    "required": "zeroOrMore"
+  },
+  "common.elem.anything": {
+    "type": "element",
+    "name": "*",
+    "contents": [
+      {
+        "type": "variable",
+        "name": "common.inner.anything",
+        "required": "required"
+      },
+      {
+        "type": "variable",
+        "name": "common.attr.anything",
+        "required": "required"
+      }
+    ],
+    "required": "required"
+  },
+  "common.elem.metadata": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.elem.phrasing": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.elem.flow": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.inner.metadata": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.id": {
+    "type": "attribute",
+    "name": {
+      "name": "id"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.id",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.class": {
+    "type": "attribute",
+    "name": {
+      "name": "class"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.tokens",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.title": {
+    "type": "attribute",
+    "name": {
+      "name": "title"
+    },
+    "value": {
+      "type": "keyword",
+      "value": "text",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.xmlbase": {
+    "type": "attribute",
+    "name": {
+      "name": "base",
+      "ns": "xml"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.uri",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.space": {
+    "type": "attribute",
+    "name": {
+      "name": "space",
+      "ns": "xml"
+    },
+    "value": [
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string"
+        },
+        "value": "preserve"
+      },
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string"
+        },
+        "value": "default"
+      }
+    ],
+    "required": "required"
+  },
+  "common.attrs.xmlspace": {
+    "type": "attribute",
+    "name": {
+      "name": "space",
+      "ns": "xml"
+    },
+    "value": [
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string"
+        },
+        "value": "preserve"
+      },
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string"
+        },
+        "value": "default"
+      }
+    ],
+    "required": "required"
+  },
+  "common.attrs.dir": {
+    "type": "attribute",
+    "name": {
+      "name": "dir"
+    },
+    "value": [
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string",
+          "ns": "w"
+        },
+        "value": "ltr"
+      },
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string",
+          "ns": "w"
+        },
+        "value": "rtl"
+      },
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string",
+          "ns": "w"
+        },
+        "value": "auto"
+      }
+    ],
+    "required": "required"
+  },
+  "common.attrs.lang": {
+    "type": "attribute",
+    "name": {
+      "name": "lang"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.langcode",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.xmllang": {
+    "type": "attribute",
+    "name": {
+      "name": "lang",
+      "ns": "xml"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.langcode",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.translate": {
+    "type": "attribute",
+    "name": {
+      "name": "translate"
+    },
+    "value": [
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string",
+          "ns": "w"
+        },
+        "value": ""
+      },
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string",
+          "ns": "w"
+        },
+        "value": "yes"
+      },
+      {
+        "type": "constant",
+        "valueType": {
+          "valueType": "string",
+          "ns": "w"
+        },
+        "value": "no"
+      }
+    ],
+    "required": "required"
+  },
+  "common.attrs.style": {
+    "type": "attribute",
+    "name": {
+      "name": "style"
+    },
+    "value": {
+      "type": "variable",
+      "name": "string",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.tabindex": {
+    "type": "attribute",
+    "name": {
+      "name": "tabindex"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.integer",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.accesskey": {
+    "type": "attribute",
+    "name": {
+      "name": "accesskey"
+    },
+    "value": {
+      "type": "variable",
+      "name": "common.data.keylabellist",
+      "required": "required"
+    },
+    "required": "required"
+  },
+  "common.attrs.other": {
+    "type": "keyword",
+    "value": "empty",
+    "required": "required"
+  },
+  "common.data.tokens": {
+    "list": {
+      "type": "keyword",
+      "value": "token",
+      "required": "zeroOrMore"
+    },
+    "required": "required"
+  },
+  "common.data.uris": {
+    "list": {
+      "type": "variable",
+      "name": "iri-ref",
+      "ns": "w",
+      "required": "zeroOrMore"
+    },
+    "required": "required"
+  },
+  "common.data.uris.http.or.https": {
+    "list": {
+      "type": "variable",
+      "name": "iri-ref-http-or-https",
+      "ns": "w",
+      "required": "zeroOrMore"
+    },
+    "required": "required"
+  },
+  "common.data.sizes": {
+    "list": {
+      "type": "regexp-pattern",
+      "pattern": "[1-9][0-9]*x[1-9][0-9]*"
+    },
+    "required": "required"
+  },
+  "common.data.microdata-properties": {
+    "list": {
+      "type": "variable",
+      "name": "microdata-property",
+      "ns": "w",
+      "required": "oneOrMore"
+    },
+    "required": "required"
+  },
+  "common-form.attrs.form": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.elem.script-supporting": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.alert": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.alertdialog": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.application": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.article": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.banner": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.button": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.checkbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.combobox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.complementary": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.contentinfo": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.dialog": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.directory": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.document": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.group": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.heading": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.img": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.link": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.list": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.listitem": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.log": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.listbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.main": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.marquee": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.menu": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.menubar": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.menuitem": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.menuitemcheckbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.menuitemradio": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.note": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.option": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.presentation": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.progressbar": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.radio": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.region": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.search": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.separator": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.slider": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.spinbutton": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.status": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.switch": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.tab": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.tablist": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.tabpanel": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.textbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.toolbar": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.tree": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.treeitem": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.article": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.banner": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.button": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.checkbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.column-or-row-header": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.combobox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.complementary": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.contentinfo": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.dialog": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.document": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.form": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.group": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.heading": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.img": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.landmark": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.link": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.list": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.listbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.listitem": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.main": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.navigation": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.option": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.progressbar": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.radio": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.region": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.section": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.select": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.slider": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.spinbutton": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.status": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.structure": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.textbox": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.implicit.toolbar": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.prop.readonly": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.banner": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.complementary": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.contentinfo": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.form": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.main": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.navigation": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.search": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.article": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.document": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.landmark.note": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-abstract": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-acknowledgments": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-afterword": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-appendix": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-backlink": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-biblioentry": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-bibliography": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-biblioref": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-chapter": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-colophon": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-conclusion": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-cover": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-credit": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-credits": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-dedication": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-endnote": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-endnotes": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-epigraph": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-epilogue": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-errata": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-example": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-footnote": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-foreword": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-glossary": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-glossref": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-index": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-introduction": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-noteref": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-notice": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-pagebreak": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-pagelist": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-part": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-preface": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-prologue": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-pullquote": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-qna": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-subtitle": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-tip": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  },
+  "common.attrs.aria.role.doc-toc": {
+    "type": "keyword",
+    "value": "notAllowed",
+    "required": "required"
+  }
+}
