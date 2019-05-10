@@ -37,7 +37,7 @@ type Attribute = {
 	contents: Values;
 };
 
-type Value = Variable | Keyword | Element | Attribute;
+export type Value = Variable | Keyword | Element | Attribute;
 
 export type Values = Value | Value[];
 
