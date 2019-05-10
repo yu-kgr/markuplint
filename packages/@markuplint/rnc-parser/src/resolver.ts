@@ -62,8 +62,9 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr) {
 				if (value.type === 'variable') {
 					const rawValue = vars.get(value.name);
 					if (rawValue) {
+						const newValue = ref(rawValue, vars);
 						// @ts-ignore
-						newValues[i] = rawValue;
+						newValues[i] = newValue.length === 1 ? newValue[0] : newValue;
 					}
 				} else if (value.type === 'keyword') {
 					// @ts-ignore
@@ -74,7 +75,9 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr) {
 		} else if (values.type === 'variable') {
 			const rawValue = vars.get(values.name);
 			if (rawValue) {
-				input.set(name, rawValue);
+				const newValue = ref(rawValue, vars);
+				// @ts-ignore
+				input.set(name, newValue.length === 1 ? newValue[0] : newValue);
 			}
 		} else if (values.type === 'element') {
 			// resolver(input, values.contents);
@@ -83,15 +86,15 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr) {
 				typeof values.name === 'string'
 					? values.name
 					: values.name.ns
-						? `${values.name.ns}:${values.name.name}`
-						: values.name.name;
+					? `${values.name.ns}:${values.name.name}`
+					: values.name.name;
 			let value: string | string[];
 			if (Array.isArray(values.value)) {
 				// @ts-ignore
 				value = values.value.map(v => v.value);
 			} else {
 				if (values.value.type === 'keyword') {
-					value = `keyword:${values.value.value}`;
+					value = `keyword::${values.value.value}`;
 				} else if (values.value.type === 'variable') {
 					const rawValue = vars.get(values.value.name);
 					if (rawValue) {
@@ -106,7 +109,7 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr) {
 				value,
 			});
 		} else if (values.type === 'keyword') {
-			input.set(name, `keyword:${values.value}`);
+			input.set(name, `keyword::${values.value}`);
 		} else {
 			input.set(name, values);
 		}
@@ -124,11 +127,11 @@ function ref(ctx: Values, vars: Vars, depth = 0): (string | Element | Attribute)
 		if (rawValue) {
 			return ref(rawValue, vars, depth + 1);
 		} else if (ctx.ns === 'w' /* TODO: datatypes */) {
-			return [`datatypes:${ctx.name}`];
+			return [`datatypes::${ctx.name}`];
 		}
 		return [];
 	} else if (ctx.type === 'keyword') {
-		return [`keyword:${ctx.value}`];
+		return [`keyword::${ctx.value}`];
 	}
 	return [ctx];
 }
