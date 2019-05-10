@@ -13,28 +13,33 @@ export type ValudType = 'keyword' | 'regexp-pattern';
 
 export type RequiredType = 'zeroOrMore' | 'oneOrMore' | 'optional' | 'required';
 
-type Variable = {
+export type Variable = {
 	type: 'variable';
 	name: string;
 	ns?: string;
 	required: RequiredType;
 };
 
-type Keyword = {
+export type Keyword = {
 	type: 'keyword';
 	value: string;
 };
 
-type Element = {
+export type Element = {
 	type: 'element';
 	name: string;
 	contents: Values;
 };
 
-type Attribute = {
+export type Attribute = {
 	type: 'attribute';
-	name: string;
-	contents: Values;
+	name:
+		| string
+		| {
+				name: string;
+				ns?: string;
+		  };
+	value: Values;
 };
 
 export type Value = Variable | Keyword | Element | Attribute;

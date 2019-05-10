@@ -1,10 +1,116 @@
 {
+  "attrs": {
+    "common.attr.anything": {
+      "name": "*",
+      "value": "keyword:text"
+    },
+    "common.attrs.id": {
+      "name": "id",
+      "value": [
+        "datatypes:ID"
+      ]
+    },
+    "common.attrs.class": {
+      "name": "class",
+      "value": [
+        {
+          "list": {
+            "type": "keyword",
+            "value": "token",
+            "required": "zeroOrMore"
+          },
+          "required": "required"
+        }
+      ]
+    },
+    "common.attrs.title": {
+      "name": "title",
+      "value": "keyword:text"
+    },
+    "common.attrs.xmlbase": {
+      "name": "xml:base",
+      "value": [
+        "datatypes:iri-ref",
+        {
+          "type": "regexp-pattern",
+          "pattern": "[ \\x{0A}-\\x{0D}]*",
+          "required": "required"
+        }
+      ]
+    },
+    "common.attrs.xmlspace": {
+      "name": "xml:space",
+      "value": [
+        "preserve",
+        "default"
+      ]
+    },
+    "common.attrs.dir": {
+      "name": "dir",
+      "value": [
+        "ltr",
+        "rtl",
+        "auto"
+      ]
+    },
+    "common.attrs.lang": {
+      "name": "lang",
+      "value": [
+        {
+          "type": {
+            "valueType": "string",
+            "ns": "w"
+          },
+          "rawValue": "",
+          "required": "required"
+        },
+        "datatypes:language"
+      ]
+    },
+    "common.attrs.xmllang": {
+      "name": "xml:lang",
+      "value": [
+        {
+          "type": {
+            "valueType": "string",
+            "ns": "w"
+          },
+          "rawValue": "",
+          "required": "required"
+        },
+        "datatypes:language"
+      ]
+    },
+    "common.attrs.translate": {
+      "name": "translate",
+      "value": [
+        "",
+        "yes",
+        "no"
+      ]
+    },
+    "common.attrs.style": {
+      "name": "style"
+    },
+    "common.attrs.tabindex": {
+      "name": "tabindex",
+      "value": [
+        "datatypes:integer"
+      ]
+    },
+    "common.attrs.accesskey": {
+      "name": "accesskey",
+      "value": [
+        "datatypes:keylabellist"
+      ]
+    }
+  },
   "ref": {
-    "XMLonly": "empty",
-    "HTMLonly": "notAllowed",
-    "v5only": "empty",
-    "nonRoundtrippable": "empty",
-    "nonHTMLizable": "empty",
+    "XMLonly": "keyword:empty",
+    "HTMLonly": "keyword:notAllowed",
+    "v5only": "keyword:empty",
+    "nonRoundtrippable": "keyword:empty",
+    "nonHTMLizable": "keyword:empty",
     "common.inner.anything": [
       "text",
       {
@@ -25,8 +131,8 @@
         "required": "required"
       }
     ],
-    "common.elem.metadata": "notAllowed",
-    "common.elem.phrasing": "notAllowed",
+    "common.elem.metadata": "keyword:notAllowed",
+    "common.elem.phrasing": "keyword:notAllowed",
     "common.elem.flow": {
       "type": "keyword",
       "value": "notAllowed",
@@ -373,7 +479,7 @@
         "required": "required"
       }
     ],
-    "common.attrs.other": "empty",
+    "common.attrs.other": "keyword:empty",
     "common.data.tokens": {
       "list": {
         "type": "keyword",
@@ -461,245 +567,138 @@
       },
       "required": "required"
     },
-    "common-form.attrs.form": "notAllowed",
-    "common.elem.script-supporting": "notAllowed",
-    "common.attrs.aria": "notAllowed",
-    "common.attrs.aria.role.alert": "notAllowed",
-    "common.attrs.aria.role.alertdialog": "notAllowed",
-    "common.attrs.aria.role.application": "notAllowed",
-    "common.attrs.aria.role.article": "notAllowed",
-    "common.attrs.aria.role.banner": "notAllowed",
-    "common.attrs.aria.role.button": "notAllowed",
-    "common.attrs.aria.role.checkbox": "notAllowed",
-    "common.attrs.aria.role.combobox": "notAllowed",
-    "common.attrs.aria.role.complementary": "notAllowed",
-    "common.attrs.aria.role.contentinfo": "notAllowed",
-    "common.attrs.aria.role.dialog": "notAllowed",
-    "common.attrs.aria.role.directory": "notAllowed",
-    "common.attrs.aria.role.document": "notAllowed",
-    "common.attrs.aria.role.group": "notAllowed",
-    "common.attrs.aria.role.heading": "notAllowed",
-    "common.attrs.aria.role.img": "notAllowed",
-    "common.attrs.aria.role.link": "notAllowed",
-    "common.attrs.aria.role.list": "notAllowed",
-    "common.attrs.aria.role.listitem": "notAllowed",
-    "common.attrs.aria.role.log": "notAllowed",
-    "common.attrs.aria.role.listbox": "notAllowed",
-    "common.attrs.aria.role.main": "notAllowed",
-    "common.attrs.aria.role.marquee": "notAllowed",
-    "common.attrs.aria.role.menu": "notAllowed",
-    "common.attrs.aria.role.menubar": "notAllowed",
-    "common.attrs.aria.role.menuitem": "notAllowed",
-    "common.attrs.aria.role.menuitemcheckbox": "notAllowed",
-    "common.attrs.aria.role.menuitemradio": "notAllowed",
-    "common.attrs.aria.role.note": "notAllowed",
-    "common.attrs.aria.role.option": "notAllowed",
-    "common.attrs.aria.role.presentation": "notAllowed",
-    "common.attrs.aria.role.progressbar": "notAllowed",
-    "common.attrs.aria.role.radio": "notAllowed",
-    "common.attrs.aria.role.region": "notAllowed",
-    "common.attrs.aria.role.search": "notAllowed",
-    "common.attrs.aria.role.separator": "notAllowed",
-    "common.attrs.aria.role.slider": "notAllowed",
-    "common.attrs.aria.role.spinbutton": "notAllowed",
-    "common.attrs.aria.role.status": "notAllowed",
-    "common.attrs.aria.role.switch": "notAllowed",
-    "common.attrs.aria.role.tab": "notAllowed",
-    "common.attrs.aria.role.tablist": "notAllowed",
-    "common.attrs.aria.role.tabpanel": "notAllowed",
-    "common.attrs.aria.role.textbox": "notAllowed",
-    "common.attrs.aria.role.toolbar": "notAllowed",
-    "common.attrs.aria.role.tree": "notAllowed",
-    "common.attrs.aria.role.treeitem": "notAllowed",
-    "common.attrs.aria.implicit.article": "notAllowed",
-    "common.attrs.aria.implicit.banner": "notAllowed",
-    "common.attrs.aria.implicit.button": "notAllowed",
-    "common.attrs.aria.implicit.checkbox": "notAllowed",
-    "common.attrs.aria.implicit.column-or-row-header": "notAllowed",
-    "common.attrs.aria.implicit.combobox": "notAllowed",
-    "common.attrs.aria.implicit.complementary": "notAllowed",
-    "common.attrs.aria.implicit.contentinfo": "notAllowed",
-    "common.attrs.aria.implicit.dialog": "notAllowed",
-    "common.attrs.aria.implicit.document": "notAllowed",
-    "common.attrs.aria.implicit.form": "notAllowed",
-    "common.attrs.aria.implicit.group": "notAllowed",
-    "common.attrs.aria.implicit.heading": "notAllowed",
-    "common.attrs.aria.implicit.img": "notAllowed",
-    "common.attrs.aria.implicit.landmark": "notAllowed",
-    "common.attrs.aria.implicit.link": "notAllowed",
-    "common.attrs.aria.implicit.list": "notAllowed",
-    "common.attrs.aria.implicit.listbox": "notAllowed",
-    "common.attrs.aria.implicit.listitem": "notAllowed",
-    "common.attrs.aria.implicit.main": "notAllowed",
-    "common.attrs.aria.implicit.navigation": "notAllowed",
-    "common.attrs.aria.implicit.option": "notAllowed",
-    "common.attrs.aria.implicit.progressbar": "notAllowed",
-    "common.attrs.aria.implicit.radio": "notAllowed",
-    "common.attrs.aria.implicit.region": "notAllowed",
-    "common.attrs.aria.implicit.section": "notAllowed",
-    "common.attrs.aria.implicit.select": "notAllowed",
-    "common.attrs.aria.implicit.slider": "notAllowed",
-    "common.attrs.aria.implicit.spinbutton": "notAllowed",
-    "common.attrs.aria.implicit.status": "notAllowed",
-    "common.attrs.aria.implicit.structure": "notAllowed",
-    "common.attrs.aria.implicit.textbox": "notAllowed",
-    "common.attrs.aria.implicit.toolbar": "notAllowed",
-    "common.attrs.aria.prop.readonly": "notAllowed",
-    "common.attrs.aria.landmark.banner": "notAllowed",
-    "common.attrs.aria.landmark.complementary": "notAllowed",
-    "common.attrs.aria.landmark.contentinfo": "notAllowed",
-    "common.attrs.aria.landmark.form": "notAllowed",
-    "common.attrs.aria.landmark.main": "notAllowed",
-    "common.attrs.aria.landmark.navigation": "notAllowed",
-    "common.attrs.aria.landmark.search": "notAllowed",
-    "common.attrs.aria.landmark.article": "notAllowed",
-    "common.attrs.aria.landmark.document": "notAllowed",
-    "common.attrs.aria.landmark.note": "notAllowed",
-    "common.attrs.aria.role.doc-abstract": "notAllowed",
-    "common.attrs.aria.role.doc-acknowledgments": "notAllowed",
-    "common.attrs.aria.role.doc-afterword": "notAllowed",
-    "common.attrs.aria.role.doc-appendix": "notAllowed",
-    "common.attrs.aria.role.doc-backlink": "notAllowed",
-    "common.attrs.aria.role.doc-biblioentry": "notAllowed",
-    "common.attrs.aria.role.doc-bibliography": "notAllowed",
-    "common.attrs.aria.role.doc-biblioref": "notAllowed",
-    "common.attrs.aria.role.doc-chapter": "notAllowed",
-    "common.attrs.aria.role.doc-colophon": "notAllowed",
-    "common.attrs.aria.role.doc-conclusion": "notAllowed",
-    "common.attrs.aria.role.doc-cover": "notAllowed",
-    "common.attrs.aria.role.doc-credit": "notAllowed",
-    "common.attrs.aria.role.doc-credits": "notAllowed",
-    "common.attrs.aria.role.doc-dedication": "notAllowed",
-    "common.attrs.aria.role.doc-endnote": "notAllowed",
-    "common.attrs.aria.role.doc-endnotes": "notAllowed",
-    "common.attrs.aria.role.doc-epigraph": "notAllowed",
-    "common.attrs.aria.role.doc-epilogue": "notAllowed",
-    "common.attrs.aria.role.doc-errata": "notAllowed",
-    "common.attrs.aria.role.doc-example": "notAllowed",
-    "common.attrs.aria.role.doc-footnote": "notAllowed",
-    "common.attrs.aria.role.doc-foreword": "notAllowed",
-    "common.attrs.aria.role.doc-glossary": "notAllowed",
-    "common.attrs.aria.role.doc-glossref": "notAllowed",
-    "common.attrs.aria.role.doc-index": "notAllowed",
-    "common.attrs.aria.role.doc-introduction": "notAllowed",
-    "common.attrs.aria.role.doc-noteref": "notAllowed",
-    "common.attrs.aria.role.doc-notice": "notAllowed",
-    "common.attrs.aria.role.doc-pagebreak": "notAllowed",
-    "common.attrs.aria.role.doc-pagelist": "notAllowed",
-    "common.attrs.aria.role.doc-part": "notAllowed",
-    "common.attrs.aria.role.doc-preface": "notAllowed",
-    "common.attrs.aria.role.doc-prologue": "notAllowed",
-    "common.attrs.aria.role.doc-pullquote": "notAllowed",
-    "common.attrs.aria.role.doc-qna": "notAllowed",
-    "common.attrs.aria.role.doc-subtitle": "notAllowed",
-    "common.attrs.aria.role.doc-tip": "notAllowed",
-    "common.attrs.aria.role.doc-toc": "notAllowed"
-  },
-  "attrs": {
-    "common.attr.anything": {
-      "name": "*",
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.id": {
-      "name": {
-        "name": "id"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.class": {
-      "name": {
-        "name": "class"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.title": {
-      "name": {
-        "name": "title"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.xmlbase": {
-      "name": {
-        "name": "base",
-        "ns": "xml"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.xmlspace": {
-      "name": {
-        "name": "space",
-        "ns": "xml"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.dir": {
-      "name": {
-        "name": "dir"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.lang": {
-      "name": {
-        "name": "lang"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.xmllang": {
-      "name": {
-        "name": "lang",
-        "ns": "xml"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.translate": {
-      "name": {
-        "name": "translate"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.style": {
-      "name": {
-        "name": "style"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.tabindex": {
-      "name": {
-        "name": "tabindex"
-      },
-      "values": [
-        "属性"
-      ]
-    },
-    "common.attrs.accesskey": {
-      "name": {
-        "name": "accesskey"
-      },
-      "values": [
-        "属性"
-      ]
-    }
+    "common-form.attrs.form": "keyword:notAllowed",
+    "common.elem.script-supporting": "keyword:notAllowed",
+    "common.attrs.aria": "keyword:notAllowed",
+    "common.attrs.aria.role.alert": "keyword:notAllowed",
+    "common.attrs.aria.role.alertdialog": "keyword:notAllowed",
+    "common.attrs.aria.role.application": "keyword:notAllowed",
+    "common.attrs.aria.role.article": "keyword:notAllowed",
+    "common.attrs.aria.role.banner": "keyword:notAllowed",
+    "common.attrs.aria.role.button": "keyword:notAllowed",
+    "common.attrs.aria.role.checkbox": "keyword:notAllowed",
+    "common.attrs.aria.role.combobox": "keyword:notAllowed",
+    "common.attrs.aria.role.complementary": "keyword:notAllowed",
+    "common.attrs.aria.role.contentinfo": "keyword:notAllowed",
+    "common.attrs.aria.role.dialog": "keyword:notAllowed",
+    "common.attrs.aria.role.directory": "keyword:notAllowed",
+    "common.attrs.aria.role.document": "keyword:notAllowed",
+    "common.attrs.aria.role.group": "keyword:notAllowed",
+    "common.attrs.aria.role.heading": "keyword:notAllowed",
+    "common.attrs.aria.role.img": "keyword:notAllowed",
+    "common.attrs.aria.role.link": "keyword:notAllowed",
+    "common.attrs.aria.role.list": "keyword:notAllowed",
+    "common.attrs.aria.role.listitem": "keyword:notAllowed",
+    "common.attrs.aria.role.log": "keyword:notAllowed",
+    "common.attrs.aria.role.listbox": "keyword:notAllowed",
+    "common.attrs.aria.role.main": "keyword:notAllowed",
+    "common.attrs.aria.role.marquee": "keyword:notAllowed",
+    "common.attrs.aria.role.menu": "keyword:notAllowed",
+    "common.attrs.aria.role.menubar": "keyword:notAllowed",
+    "common.attrs.aria.role.menuitem": "keyword:notAllowed",
+    "common.attrs.aria.role.menuitemcheckbox": "keyword:notAllowed",
+    "common.attrs.aria.role.menuitemradio": "keyword:notAllowed",
+    "common.attrs.aria.role.note": "keyword:notAllowed",
+    "common.attrs.aria.role.option": "keyword:notAllowed",
+    "common.attrs.aria.role.presentation": "keyword:notAllowed",
+    "common.attrs.aria.role.progressbar": "keyword:notAllowed",
+    "common.attrs.aria.role.radio": "keyword:notAllowed",
+    "common.attrs.aria.role.region": "keyword:notAllowed",
+    "common.attrs.aria.role.search": "keyword:notAllowed",
+    "common.attrs.aria.role.separator": "keyword:notAllowed",
+    "common.attrs.aria.role.slider": "keyword:notAllowed",
+    "common.attrs.aria.role.spinbutton": "keyword:notAllowed",
+    "common.attrs.aria.role.status": "keyword:notAllowed",
+    "common.attrs.aria.role.switch": "keyword:notAllowed",
+    "common.attrs.aria.role.tab": "keyword:notAllowed",
+    "common.attrs.aria.role.tablist": "keyword:notAllowed",
+    "common.attrs.aria.role.tabpanel": "keyword:notAllowed",
+    "common.attrs.aria.role.textbox": "keyword:notAllowed",
+    "common.attrs.aria.role.toolbar": "keyword:notAllowed",
+    "common.attrs.aria.role.tree": "keyword:notAllowed",
+    "common.attrs.aria.role.treeitem": "keyword:notAllowed",
+    "common.attrs.aria.implicit.article": "keyword:notAllowed",
+    "common.attrs.aria.implicit.banner": "keyword:notAllowed",
+    "common.attrs.aria.implicit.button": "keyword:notAllowed",
+    "common.attrs.aria.implicit.checkbox": "keyword:notAllowed",
+    "common.attrs.aria.implicit.column-or-row-header": "keyword:notAllowed",
+    "common.attrs.aria.implicit.combobox": "keyword:notAllowed",
+    "common.attrs.aria.implicit.complementary": "keyword:notAllowed",
+    "common.attrs.aria.implicit.contentinfo": "keyword:notAllowed",
+    "common.attrs.aria.implicit.dialog": "keyword:notAllowed",
+    "common.attrs.aria.implicit.document": "keyword:notAllowed",
+    "common.attrs.aria.implicit.form": "keyword:notAllowed",
+    "common.attrs.aria.implicit.group": "keyword:notAllowed",
+    "common.attrs.aria.implicit.heading": "keyword:notAllowed",
+    "common.attrs.aria.implicit.img": "keyword:notAllowed",
+    "common.attrs.aria.implicit.landmark": "keyword:notAllowed",
+    "common.attrs.aria.implicit.link": "keyword:notAllowed",
+    "common.attrs.aria.implicit.list": "keyword:notAllowed",
+    "common.attrs.aria.implicit.listbox": "keyword:notAllowed",
+    "common.attrs.aria.implicit.listitem": "keyword:notAllowed",
+    "common.attrs.aria.implicit.main": "keyword:notAllowed",
+    "common.attrs.aria.implicit.navigation": "keyword:notAllowed",
+    "common.attrs.aria.implicit.option": "keyword:notAllowed",
+    "common.attrs.aria.implicit.progressbar": "keyword:notAllowed",
+    "common.attrs.aria.implicit.radio": "keyword:notAllowed",
+    "common.attrs.aria.implicit.region": "keyword:notAllowed",
+    "common.attrs.aria.implicit.section": "keyword:notAllowed",
+    "common.attrs.aria.implicit.select": "keyword:notAllowed",
+    "common.attrs.aria.implicit.slider": "keyword:notAllowed",
+    "common.attrs.aria.implicit.spinbutton": "keyword:notAllowed",
+    "common.attrs.aria.implicit.status": "keyword:notAllowed",
+    "common.attrs.aria.implicit.structure": "keyword:notAllowed",
+    "common.attrs.aria.implicit.textbox": "keyword:notAllowed",
+    "common.attrs.aria.implicit.toolbar": "keyword:notAllowed",
+    "common.attrs.aria.prop.readonly": "keyword:notAllowed",
+    "common.attrs.aria.landmark.banner": "keyword:notAllowed",
+    "common.attrs.aria.landmark.complementary": "keyword:notAllowed",
+    "common.attrs.aria.landmark.contentinfo": "keyword:notAllowed",
+    "common.attrs.aria.landmark.form": "keyword:notAllowed",
+    "common.attrs.aria.landmark.main": "keyword:notAllowed",
+    "common.attrs.aria.landmark.navigation": "keyword:notAllowed",
+    "common.attrs.aria.landmark.search": "keyword:notAllowed",
+    "common.attrs.aria.landmark.article": "keyword:notAllowed",
+    "common.attrs.aria.landmark.document": "keyword:notAllowed",
+    "common.attrs.aria.landmark.note": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-abstract": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-acknowledgments": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-afterword": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-appendix": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-backlink": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-biblioentry": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-bibliography": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-biblioref": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-chapter": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-colophon": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-conclusion": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-cover": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-credit": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-credits": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-dedication": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-endnote": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-endnotes": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-epigraph": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-epilogue": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-errata": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-example": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-footnote": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-foreword": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-glossary": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-glossref": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-index": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-introduction": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-noteref": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-notice": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-pagebreak": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-pagelist": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-part": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-preface": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-prologue": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-pullquote": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-qna": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-subtitle": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-tip": "keyword:notAllowed",
+    "common.attrs.aria.role.doc-toc": "keyword:notAllowed"
   }
 }
