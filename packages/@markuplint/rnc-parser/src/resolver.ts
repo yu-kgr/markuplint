@@ -1,4 +1,4 @@
-import { Attribute, Element, Keyword, Ref, Values, parse } from './parser';
+import { Attribute, Element, Ref, Values, parse } from './parser';
 import { readFile, writeFile } from 'fs';
 import { promisify } from 'util';
 import { resolve } from 'path';
@@ -11,8 +11,18 @@ Map.prototype.toJSON = function() {
 	return Array.from(this).reduce((sum, [v, k]) => ((sum[v] = k), sum), {});
 };
 
-asyncReadFlie(resolve(__dirname, '../src/common.rnc'), { encoding: 'utf-8' }).then(rnc => {
-	const grammers = parse(rnc);
+async function loadRNC(path: string) {
+	try {
+		const rnc = await asyncReadFlie(resolve(__dirname, path), { encoding: 'utf-8' });
+		return parse(rnc);
+	} catch (e) {
+		console.warn(e);
+	}
+	return [];
+}
+
+async function main() {
+	const grammers = await loadRNC('../src/html5.rnc');
 
 	const refs: Ref[] = [];
 
@@ -24,11 +34,26 @@ asyncReadFlie(resolve(__dirname, '../src/common.rnc'), { encoding: 'utf-8' }).th
 		}
 	}
 
+	for (const grammer of grammers) {
+		switch (grammer.type) {
+			// @ts-ignore
+			case 'include': {
+				// @ts-ignore
+				console.log(grammer.type, grammer.file);
+				// @ts-ignore
+				const externalRefs = await loadRNC(`../src/${grammer.file}`);
+				console.log(externalRefs);
+				refs.push(...externalRefs);
+			}
+		}
+	}
+
 	const vars = new Map<string, Values>();
 
 	for (const ref of refs) {
 		if (vars.has(ref.variableName.name)) {
 			// TODO: merging
+			vars.set(ref.variableName.name + '__', ref.value);
 			return;
 		}
 		vars.set(ref.variableName.name, ref.value);
@@ -36,10 +61,12 @@ asyncReadFlie(resolve(__dirname, '../src/common.rnc'), { encoding: 'utf-8' }).th
 
 	const resolvedVars: Vars = new Map<string, Values>();
 	const attrs: Attr = new Map<string, { name: string; value: string[] }>();
+	const elems: Elem = new Map<string, { name: string; value: string[] }>();
 
-	resolver(resolvedVars, vars, attrs);
+	resolver(resolvedVars, vars, attrs, elems);
 
 	const result = {
+		elems,
 		attrs,
 		ref: resolvedVars,
 	};
@@ -47,13 +74,15 @@ asyncReadFlie(resolve(__dirname, '../src/common.rnc'), { encoding: 'utf-8' }).th
 	writeFile(resolve(__dirname, '../src/spec.json'), JSON.stringify(result, null, 2), () =>
 		process.stdout.write('🎉 Generated spec.json.'),
 	);
-});
+}
 
 type Vars = Map<string, Values>;
 
 type Attr = Map<string, { name: string; value: string | string[] }>;
 
-function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr) {
+type Elem = Map<string, { name: string; value: string | string[] }>;
+
+function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr, elems: Elem) {
 	for (const [name, values] of vars) {
 		if (Array.isArray(values)) {
 			const newValues = [...values];
@@ -80,7 +109,7 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr) {
 				input.set(name, newValue.length === 1 ? newValue[0] : newValue);
 			}
 		} else if (values.type === 'element') {
-			// resolver(input, values.contents);
+			elems.set(name, { name: values.name, value: '★' });
 		} else if (values.type === 'attribute') {
 			const attrName =
 				typeof values.name === 'string'
@@ -139,3 +168,5 @@ function ref(ctx: Values, vars: Vars, depth = 0): (string | Element | Attribute)
 Array.prototype.flat = function() {
 	return Array.prototype.concat.apply([], this);
 };
+
+main();
