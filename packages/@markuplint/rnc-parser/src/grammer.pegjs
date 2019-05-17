@@ -4,7 +4,7 @@ Doc = block:Block+ {
 	return block.filter(_ => _);
 }
 
-Block = _ block:(Include /DefaultDef / DatatypeDef / Ref / Comment) _ {
+Block = _ block:(Include /DefaultDef / DatatypeDef /NamespaceDef / Ref / Comment) _ {
 	return block;
 }
 
@@ -19,6 +19,13 @@ DefaultDef = "default" _ def:Ref  {
 	return {
 		...def,
 		type: "default",
+	}
+}
+
+NamespaceDef = "namespace" _ def:Ref  {
+	return {
+		...def,
+		type: "namespace",
 	}
 }
 
@@ -43,7 +50,7 @@ Ref = variableName:Identifier _ defType:("=" / "|=" / "&=") _ value:(Identifiers
 	return ref
 }
 
-NodeDef = nodeType:NodeType _ name:(AnyType/NodeName) _ "{" _  contents:(AttrValue / Identifiers / Identifier) _ "}" required:Required {
+NodeDef = nodeType:NodeType _ name:(AttrName) _ "{" _  contents:(AttrValue / Identifiers / Identifier) _ "}" required:Required {
 	switch (nodeType) {
 		case "element":
 			return {
@@ -62,6 +69,10 @@ NodeDef = nodeType:NodeType _ name:(AnyType/NodeName) _ "{" _  contents:(AttrVal
 	}
 }
 
+AttrName = name:(MultipleNodeName / NodeName) not:(_ "-" _ (MultipleNodeName / NodeName)) {
+	return {name, not: not[3]}
+}
+
 
 ListDef = "list" _ "{" _  contents:(RegExp / AttrValue / Identifiers / Identifier) _ "}" required:Required {
 	return {
@@ -70,11 +81,19 @@ ListDef = "list" _ "{" _  contents:(RegExp / AttrValue / Identifiers / Identifie
 	}
 }
 
-MultipleDef = "(" _ ids:(Identifiers / Identifier) _ ")"  {
+MultipleDef = "(" _ ids:(Identifiers / Identifier) _ ")" Required  {
 	return ids
 }
 
 NodeType = "element" / "attribute"
+
+MultipleNodeName = "(" _ names:NodeNamesOrList _ ")"  {
+	return names
+}
+
+NodeNamesOrList = ids:(NodeName _ "|" _)+ lastId:NodeName {
+	return {or: [...ids.map(id => id[0]), lastId]}
+}
 
 NodeName = nsNodeName / nonnsNodeName
 
@@ -82,11 +101,9 @@ nsNodeName = ns:$[a-zA-Z0-9]+ ":" name:nonnsNodeName {
 	return { ...name, ns }
 }
 
-nonnsNodeName = name:$[a-zA-Z0-9-]+ {
+nonnsNodeName = name:($[a-zA-Z0-9-] / "*")+ {
 	return { name }
 }
-
-AnyType = "*"
 
 Identifiers = IdentifiersAndList / IdentifiersOrList / IdentifiersCommaList
 
@@ -181,7 +198,7 @@ SingleQuoteString = str:("'" $[^']* "'") {
 	return str[1]
 }
 
-Required = token:("*" / "+" / "?" / "") {
+Required = _ token:("*" / "+" / "?" / "") {
 	switch (token) {
 		case "*": return "zeroOrMore";
 		case "+": return "oneOrMore";
