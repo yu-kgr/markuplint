@@ -82,23 +82,27 @@ nsNodeName = ns:$[a-zA-Z0-9]+ ":" name:nonnsNodeName {
 	return { ...name, ns }
 }
 
-nonnsNodeName = name:$[a-zA-Z0-9]+ {
+nonnsNodeName = name:$[a-zA-Z0-9-]+ {
 	return { name }
 }
 
 AnyType = "*"
 
-Identifiers = IdentifiersAndList / IdentifiersOrList
+Identifiers = IdentifiersAndList / IdentifiersOrList / IdentifiersCommaList
 
 IdentifiersAndList = ids:(Identifier _ "&" _)+ lastId:Identifier {
-	return [...ids.map(id => id[0]), lastId]
+	return {and: [...ids.map(id => id[0]), lastId]}
 }
 
 IdentifiersOrList = ids:(Identifier _ "|" _)+ lastId:Identifier {
-	return [...ids.map(id => id[0]), lastId]
+	return {or: [...ids.map(id => id[0]), lastId]}
 }
 
-Identifier = id:(RegExp / Keyword / TypedValue / Variable) required:Required {
+IdentifiersCommaList = ids:(Identifier _ "," _)+ lastId:Identifier {
+	return {comma: [...ids.map(id => id[0]), lastId]}
+}
+
+Identifier = id:(MultipleDef / ListDef / RegExp / TypedValue / Variable / Keyword) required:Required {
 	id.required = required
 	return id
 }
@@ -150,7 +154,7 @@ RegExp = valueType:ValueType _ "{" _ "pattern" _ "=" _ pattern:String  _ "}" req
 	}
 }
 
-Comment = "#" comment:$[^\n]+ {
+Comment = "#" comment:$[^\n]* {
 	return null
 }
 
@@ -165,7 +169,7 @@ nonnsValueType = valueType:ValueTypeEnum {
 	return { valueType }
 }
 
-ValueTypeEnum = "string"
+ValueTypeEnum = "string" / "token"
 
 String = DoubleQuoteString / SingleQuoteString
 
