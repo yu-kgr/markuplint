@@ -350,6 +350,26 @@ describe('Element', () => {
 			],
 		});
 	});
+
+	it('is Element and without element', () => {
+		expect(parse('a = element a - (b) { sub }')[0]).toStrictEqual({
+			type: 'define',
+			name: 'a',
+			contents: [
+				{
+					type: 'element',
+					name: 'a',
+					without: 'b',
+					contents: [
+						{
+							type: 'ref',
+							name: 'sub',
+						},
+					],
+				},
+			],
+		});
+	});
 });
 
 describe('Attribute', () => {
@@ -358,12 +378,10 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: [
-					{
-						type: 'ref',
-						name: 'sub',
-					},
-				],
+				values: {
+					type: 'ref',
+					name: 'sub',
+				},
 			},
 		]);
 	});
@@ -373,12 +391,10 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: [
-					{
-						type: 'keyword',
-						name: 'text',
-					},
-				],
+				values: {
+					type: 'keyword',
+					name: 'text',
+				},
 			},
 		]);
 	});
@@ -388,16 +404,18 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: [
-					{
-						type: 'ref',
-						name: 'sub',
-					},
-					{
-						type: 'keyword',
-						name: 'text',
-					},
-				],
+				values: {
+					choice: [
+						{
+							type: 'ref',
+							name: 'sub',
+						},
+						{
+							type: 'keyword',
+							name: 'text',
+						},
+					],
+				},
 			},
 		]);
 	});
@@ -407,18 +425,20 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: [
-					{
-						type: 'string',
-						ns: null,
-						value: '',
-					},
-					{
-						type: 'string',
-						ns: null,
-						value: 'foo',
-					},
-				],
+				values: {
+					choice: [
+						{
+							type: 'string',
+							ns: null,
+							value: '',
+						},
+						{
+							type: 'string',
+							ns: null,
+							value: 'foo',
+						},
+					],
+				},
 			},
 		]);
 	});
@@ -428,13 +448,11 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: [
-					{
-						type: 'string',
-						ns: null,
-						value: 'foo',
-					},
-				],
+				values: {
+					type: 'string',
+					ns: null,
+					value: 'foo',
+				},
 			},
 		]);
 	});
@@ -444,20 +462,70 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: [
-					{
-						type: 'string',
-						ns: 'w',
-						value: '',
-					},
-					{
-						type: 'string',
-						ns: 'w',
-						value: 'foo',
-					},
-				],
+				values: {
+					choice: [
+						{
+							type: 'string',
+							ns: 'w',
+							value: '',
+						},
+						{
+							type: 'string',
+							ns: 'w',
+							value: 'foo',
+						},
+					],
+				},
 			},
 		]);
+	});
+
+	it('is Attribute (complex contents)', () => {
+		expect(parse('a = attribute a { (b & c) | (xsd:string { pattern = "[a-z]" } & x) }')[0].contents).toStrictEqual(
+			[
+				{
+					type: 'attribute',
+					name: 'a',
+					values: {
+						choice: [
+							{
+								type: 'group',
+								contents: {
+									interleave: [
+										{
+											type: 'ref',
+											name: 'b',
+										},
+										{
+											type: 'ref',
+											name: 'c',
+										},
+									],
+								},
+							},
+							{
+								type: 'group',
+								contents: {
+									interleave: [
+										{
+											type: 'string',
+											ns: 'xsd',
+											params: {
+												pattern: '[a-z]',
+											},
+										},
+										{
+											type: 'ref',
+											name: 'x',
+										},
+									],
+								},
+							},
+						],
+					},
+				},
+			],
+		);
 	});
 });
 
@@ -466,7 +534,7 @@ describe('Value list', () => {
 		expect(parse('a = list { token* }')[0].contents).toStrictEqual([
 			{
 				type: 'list',
-				values: [
+				items: [
 					{
 						type: 'keyword',
 						name: 'token',
@@ -481,7 +549,7 @@ describe('Value list', () => {
 		expect(parse('a = list { token }')[0].contents).toStrictEqual([
 			{
 				type: 'list',
-				values: [
+				items: [
 					{
 						type: 'keyword',
 						name: 'token',
@@ -495,12 +563,58 @@ describe('Value list', () => {
 		expect(parse('a = list { name:refs+ }')[0].contents).toStrictEqual([
 			{
 				type: 'list',
-				values: [
+				items: [
 					{
 						type: 'ref',
 						ns: 'name',
 						name: 'refs',
 						required: 'oneOrMore',
+					},
+				],
+			},
+		]);
+	});
+
+	it('is ordered list', () => {
+		expect(parse('a = list { token "a", (string "b")? }')[0].contents).toStrictEqual([
+			{
+				type: 'list',
+				items: [
+					{
+						type: 'token',
+						ns: null,
+						value: 'a',
+					},
+					{
+						type: 'string',
+						ns: null,
+						value: 'b',
+						required: 'optional',
+					},
+				],
+			},
+		]);
+	});
+
+	it('is choice list', () => {
+		expect(parse('a = list { token "a" | (string "b")? }')[0].contents).toStrictEqual([
+			{
+				type: 'list',
+				items: [
+					{
+						choice: [
+							{
+								type: 'token',
+								ns: null,
+								value: 'a',
+							},
+							{
+								type: 'string',
+								ns: null,
+								value: 'b',
+								required: 'optional',
+							},
+						],
 					},
 				],
 			},
@@ -538,7 +652,7 @@ describe('Data with params', () => {
 		expect(parse('a = list { xsd:string { pattern = "[a-z]+" }}')[0].contents).toStrictEqual([
 			{
 				type: 'list',
-				values: [
+				items: [
 					{
 						type: 'string',
 						ns: 'xsd',
@@ -547,6 +661,17 @@ describe('Data with params', () => {
 						},
 					},
 				],
+			},
+		]);
+	});
+});
+
+describe('Literal', () => {
+	it('is string', () => {
+		expect(parse('a = "abc"')[0].contents).toStrictEqual([
+			{
+				type: 'string',
+				value: 'abc',
 			},
 		]);
 	});

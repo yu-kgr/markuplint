@@ -1,5 +1,5 @@
 // @ts-ignore
-import { SyntaxError as _SyntaxError, parse as _parse } from './_parser';
+import { SyntaxError as _SyntaxError, parse as _parse } from './_tokenizer';
 
 export interface ISyntaxError {}
 
@@ -75,7 +75,7 @@ export interface Merge extends _Grammer {
 
 export interface Include extends _Grammer {
 	type: 'include';
-	file: string;
+	filePath: string;
 }
 
 export type Grammer = Ref | Merge | Include;

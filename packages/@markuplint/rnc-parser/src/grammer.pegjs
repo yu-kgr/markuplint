@@ -4,11 +4,17 @@ __ = Comment+ / AnySpace
 
 _ = Comment+ / Whitespace
 
-Comment = AnySpace "#" comment:$[^\n]* AnySpace
+Comment = AnySpace "#" comment:$[^\n]* AnySpace {
+	return null;
+}
 
-AnySpace = Whitespace*
+AnySpace = Whitespace* {
+	return null;
+}
 
-Whitespace = [ \t\n\r]+
+Whitespace = [ \t\n\r]+ {
+	return null;
+}
 
 Doc = block:(Block+ / __ / "") {
 	return block ? block.filter(_ => _) : [];
@@ -85,24 +91,30 @@ IdentifiersCommaList = ids:(Identifier __ "," __)+ lastId:Identifier {
 	return [...ids.map(id => id[0]), lastId]
 }
 
-Identifier = expression:(Group / Element / Attribute / Data / List / StringValue / Keyword / Ref) required:Required {
+Identifier = expression:(Group / Element / Attribute / Data / List / StringValue / Ref) __ required:Required {
 	return {
 		...expression,
 		...required,
 	}
 }
 
-Element = "element" _ name:(ElementName) __ "{" __ contents:Expression? __ "}" {
+Element = "element" _ name:(ElementName) without:(__ "-" __ "(" $[a-zA-Z0-9]+ ")")? __ "{" __ contents:Expression? __ "}" {
 	return {
 		type: "element",
-		name,
+		...name,
+		...(without ? {without: without[4]} : undefined),
 		contents,
 	}
 }
 
-ElementName = $[a-zA-Z0-9]+ / "*"
+ElementName = ns:($[a-zA-Z0-9]+ ":")? name:($[a-zA-Z0-9]+ / "*") {
+	return {
+    	name,
+        ...(ns ? {ns: ns[0]} : null)
+    }
+}
 
-Attribute = "attribute" _ name:(AttrName) __ "{" __  values:(Group / AttrValues) __ "}" {
+Attribute = "attribute" _ name:(AttrName) __ "{" __  values:(AttrValues) __ "}" {
 	return {
 		type: "attribute",
 		...name,
@@ -138,56 +150,79 @@ nonnsNodeName = name:($[a-zA-Z0-9-] / "*")+ {
 	return { name: name.join('') }
 }
 
-AttrValues = List / AttrRefs
+AttrValues = AttrRefs / AttrValueGroup
 
-AttrRefs = refs:(AttrRef __ "|" __)* lastRef:AttrRef {
-	return [...refs.map(ref => ref[0]), lastRef]
+AttrValueGroup = "(" __ contents:AttrRefs __ ")" __ required:Required {
+	return {
+		type: "group",
+		contents,
+		...required,
+	}
 }
 
-AttrRef = StringValue / Keyword / Ref
+AttrRefs =  AttrRefsAnd / AttrRefsOr / AttrRef
 
-Ref = ns:($[a-zA-Z0-9]+ ":")? name:$[a-zA-Z0-9-.]+ {
-	if (ns) {
-		return {
-			type: "ref",
-			ns: ns[0],
-			name,
-		}
-	}
+AttrRefsOr = refs:(AttrRef __ "|" __)+ lastRef:AttrRef {
+	return {choice: [...refs.map(ref => ref[0]), lastRef]}
+}
+
+AttrRefsAnd = refs:(AttrRef __ "&" __)+ lastRef:AttrRef {
+	return {interleave: [...refs.map(ref => ref[0]), lastRef]}
+}
+
+AttrRef = StringValue / List / Data / Ref / AttrValueGroup
+
+Ref = ns:($[a-zA-Z0-9]+ ":")? name:$[a-zA-Z0-9_.-]+ {
+	let type = "ref";
+    if (["empty", "notAllowed", "text", "token"].includes(name)) {
+    	type = "keyword";
+    }
 	return {
-		type: "ref",
+		type,
+        ...(ns ? {ns: ns[0]} : null),
 		name,
 	}
 }
 
-Keyword = keyword:("empty" / "notAllowed" / "text" / "token") {
-	return {
-		type:"keyword",
-		name: keyword
-	}
-}
-
-List = "list" _ "{" __  values:((Data / Keyword / Ref) Required)* __ "}" {
+List = "list" _ "{" __  firstItem:ListItem items:(__ ',' __ ListItem )* __ "}" {
 	return {
 		type: "list",
-		values: values.map(item => {
-			return {
-				...item[0],
-				...item[1],
-			}
-		}),
+		items: [firstItem, ...items.map(tokens => tokens[3])],
 	}
 }
 
-StringValue = ns:($[a-z0-9]+ ":")? type:$[a-z0-9]+ _ value:StringToken {
+ListItem = content:(AttrValues) required:Required {
 	return {
-    	type,
+		...content,
+		...required,
+	}
+}
+
+StringValue = StringWrappedValue / StringBearValue / RawString
+
+StringWrappedValue = "(" __ str:StringBearValue __ ")" required:Required {
+	return {
+		...str,
+		...required,
+	};
+}
+
+StringBearValue = ns:($[a-zA-Z0-9]+ ":")? type:$[a-zA-Z0-9]+ _ value:StringToken {
+	return {
+		type,
 		ns: ns ? ns[0] : null,
 		value,
 	}
 }
 
-Data = ns:($[a-z0-9]+ ":")? type:$[a-z0-9]+ __ "{" __ params:DataParams __ "}" {
+RawString = value:StringToken {
+	return {
+    	type: "string",
+        value,
+    }
+}
+
+Data = ns:($[a-zA-Z0-9]+ ":")? type:$[a-zA-Z0-9]+ __ "{" __ params:DataParams __ "}" {
 	return {
 		type,
 		ns: ns ? ns[0] : null,
@@ -203,7 +238,7 @@ DataParams = firstParam:DataParam params:(_ DataParam)*  {
 	return result;
 }
 
-DataParam = prop:$[a-z0-9]+ __ "=" __ value:StringToken {
+DataParam = prop:$[a-zA-Z0-9]+ __ "=" __ value:StringToken {
 	return {
 		[prop]: value,
 	}

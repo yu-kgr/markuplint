@@ -16,7 +16,8 @@ async function loadRNC(path: string) {
 		const rnc = await asyncReadFlie(path, { encoding: 'utf-8' });
 		return parse(rnc);
 	} catch (e) {
-		// console.warn(e);
+		// eslint-disable-next-line no-console
+		console.warn(e);
 	}
 	return [];
 }
@@ -26,7 +27,7 @@ async function getGrammersRecursive(grammers: Grammer[], baseDir: string) {
 	for (const grammer of grammers) {
 		switch (grammer.type) {
 			case 'include': {
-				const gs = await loadRNC(resolve(baseDir, `${grammer.file}`));
+				const gs = await loadRNC(resolve(baseDir, `${grammer.filePath}`));
 				newGrammers.push(...gs);
 				continue;
 			}
@@ -42,41 +43,41 @@ async function main() {
 	const _grammers = await loadRNC(basePath);
 	const grammers = await getGrammersRecursive(_grammers, baseDir);
 
-	const vars = new Map<string, Values>();
+	// const vars = new Map<string, Values>();
 
-	for (const grammer of grammers) {
-		switch (grammer.type) {
-			case 'ref': {
-				vars.set(grammer.variableName.name, grammer.value);
-				continue;
-			}
-			case 'marge-or':
-			case 'marge-and': {
-				if (!vars.has(grammer.variableName.name)) {
-					vars.set(grammer.variableName.name, grammer.value || []);
-				} else {
-					const variable = vars.get(grammer.variableName.name)!;
-					if (grammer.type === 'marge-or') {
-						//
-					}
-				}
-			}
-		}
-	}
+	// for (const grammer of grammers) {
+	// 	switch (grammer.type) {
+	// 		case 'ref': {
+	// 			vars.set(grammer.variableName.name, grammer.value);
+	// 			continue;
+	// 		}
+	// 		case 'marge-or':
+	// 		case 'marge-and': {
+	// 			if (!vars.has(grammer.variableName.name)) {
+	// 				vars.set(grammer.variableName.name, grammer.value || []);
+	// 			} else {
+	// 				// const variable = vars.get(grammer.variableName.name)!;
+	// 				// if (grammer.type === 'marge-or') {
+	// 				// 	//
+	// 				// }
+	// 			}
+	// 		}
+	// 	}
+	// }
 
-	const resolvedVars: Vars = new Map<string, Values>();
-	const attrs: Attr = new Map<string, { name: string; value: string[] }>();
-	const elems: Elem = new Map<string, { name: string; value: string[] }>();
+	// const resolvedVars: Vars = new Map<string, Values>();
+	// const attrs: Attr = new Map<string, { name: string; value: string[] }>();
+	// const elems: Elem = new Map<string, { name: string; value: string[] }>();
 
-	resolver(resolvedVars, vars, attrs, elems);
+	// resolver(resolvedVars, vars, attrs, elems);
 
-	const result = {
-		elems,
-		attrs,
-		ref: resolvedVars,
-	};
+	// const result = {
+	// 	elems,
+	// 	attrs,
+	// 	ref: resolvedVars,
+	// };
 
-	writeFile(resolve(__dirname, '../src/spec.json'), JSON.stringify(result, null, 2), () =>
+	writeFile(resolve(__dirname, '../src/spec.json'), JSON.stringify(grammers, null, 2), () =>
 		process.stdout.write('🎉 Generated spec.json.'),
 	);
 }
@@ -125,8 +126,8 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr, e
 				typeof values.name === 'string'
 					? values.name
 					: values.name.ns
-						? `${values.name.ns}:${values.name.name}`
-						: values.name.name;
+					? `${values.name.ns}:${values.name.name}`
+					: values.name.name;
 			let value: string | string[];
 			if (Array.isArray(values.value)) {
 				// @ts-ignore
