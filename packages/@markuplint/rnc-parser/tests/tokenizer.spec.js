@@ -407,11 +407,18 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: {
-					type: 'enum',
-					ns: null,
-					list: ['', 'foo'],
-				},
+				values: [
+					{
+						type: 'string',
+						ns: null,
+						value: '',
+					},
+					{
+						type: 'string',
+						ns: null,
+						value: 'foo',
+					},
+				],
 			},
 		]);
 	});
@@ -421,11 +428,13 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: {
-					type: 'enum',
-					ns: null,
-					list: ['foo'],
-				},
+				values: [
+					{
+						type: 'string',
+						ns: null,
+						value: 'foo',
+					},
+				],
 			},
 		]);
 	});
@@ -435,11 +444,18 @@ describe('Attribute', () => {
 			{
 				type: 'attribute',
 				name: 'attrName',
-				values: {
-					type: 'enum',
-					ns: 'w',
-					list: ['', 'foo'],
-				},
+				values: [
+					{
+						type: 'string',
+						ns: 'w',
+						value: '',
+					},
+					{
+						type: 'string',
+						ns: 'w',
+						value: 'foo',
+					},
+				],
 			},
 		]);
 	});

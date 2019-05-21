@@ -85,7 +85,7 @@ IdentifiersCommaList = ids:(Identifier __ "," __)+ lastId:Identifier {
 	return [...ids.map(id => id[0]), lastId]
 }
 
-Identifier = expression:(Group / Element / Attribute / Data / List / EnumValue / StringValue / Keyword / Ref) required:Required {
+Identifier = expression:(Group / Element / Attribute / Data / List / StringValue / Keyword / Ref) required:Required {
 	return {
 		...expression,
 		...required,
@@ -138,13 +138,13 @@ nonnsNodeName = name:($[a-zA-Z0-9-] / "*")+ {
 	return { name: name.join('') }
 }
 
-AttrValues = List / EnumValue / AttrRefs
+AttrValues = List / AttrRefs
 
 AttrRefs = refs:(AttrRef __ "|" __)* lastRef:AttrRef {
 	return [...refs.map(ref => ref[0]), lastRef]
 }
 
-AttrRef = Keyword / Ref
+AttrRef = StringValue / Keyword / Ref
 
 Ref = ns:($[a-zA-Z0-9]+ ":")? name:$[a-zA-Z0-9-.]+ {
 	if (ns) {
@@ -179,17 +179,9 @@ List = "list" _ "{" __  values:((Data / Keyword / Ref) Required)* __ "}" {
 	}
 }
 
-EnumValue = values:(StringValue __ "|" __)* lastValue:StringValue {
+StringValue = ns:($[a-z0-9]+ ":")? type:$[a-z0-9]+ _ value:StringToken {
 	return {
-		type: "enum",
-		ns: lastValue.ns,
-		list: [...values.map(v => v[0].value), lastValue.value]
-	}
-}
-
-StringValue = ns:($[a-z0-9]+ ":")? "string" __ value:StringToken {
-	return {
-		type: "string",
+    	type,
 		ns: ns ? ns[0] : null,
 		value,
 	}
