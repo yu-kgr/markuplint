@@ -4,9 +4,10 @@
 	"version": "1.0.0-alpha.0",
 	"private": true,
 	"scripts": {
-		"build": "pegjs -o lib/_parser.js src/grammer.pegjs; tsc",
+		"build": "pegjs -o lib/_tokenizer.js src/grammer.pegjs; tsc",
 		"dev": "tsc --watch",
-		"cli": "node lib/resolver.js"
+		"cli": "node lib/resolver.js",
+		"test": "jest"
 	},
 	"dependencies": {},
 	"devDependencies": {
