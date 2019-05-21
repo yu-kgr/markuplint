@@ -44,7 +44,10 @@ export type Attribute = {
 
 export type Value = Variable | Keyword | Element | Attribute;
 
-export type Values = Value | Value[];
+export type Values = Value | Value[] | OrValues | AndValues;
+
+export type OrValues = { or: Value[] };
+export type AndValues = { and: Value[] };
 
 interface _Grammer {
 	type: GrammerType;
@@ -60,7 +63,22 @@ export interface Ref extends _Grammer {
 	value: Values;
 }
 
-export type Grammer = Ref;
+export interface Merge extends _Grammer {
+	type: 'marge-or' | 'marge-and';
+	variableName: {
+		type: 'variable';
+		name: string;
+		required: RequiredType;
+	};
+	value?: Values;
+}
+
+export interface Include extends _Grammer {
+	type: 'include';
+	file: string;
+}
+
+export type Grammer = Ref | Merge | Include;
 
 interface ParseFunction {
 	(input: string, options?: any): Grammer[];

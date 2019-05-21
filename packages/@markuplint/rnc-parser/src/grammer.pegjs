@@ -1,10 +1,10 @@
 start = Doc
 
-Doc = block:Block+ {
+Doc = block:(Block+ / _) {
 	return block.filter(_ => _);
 }
 
-Block = _ block:(Include /DefaultDef / DatatypeDef /NamespaceDef / Ref / Comment) _ {
+Block = _ block:(Include /NamespaceDef / DefaultDef / DatatypeDef / Ref / Comment) _ {
 	return block;
 }
 
@@ -15,16 +15,17 @@ DatatypeDef = "datatypes" _ def:Ref  {
 	}
 }
 
-DefaultDef = "default" _ def:Ref  {
+DefaultDef = "default"  _ def:Ref  {
 	return {
 		...def,
 		type: "default",
 	}
 }
 
-NamespaceDef = "namespace" _ def:Ref  {
+NamespaceDef = defaults:("default" / "" ) _ "namespace" _ def:Ref  {
 	return {
 		...def,
+        defaults: !!defaults,
 		type: "namespace",
 	}
 }
@@ -43,7 +44,7 @@ Include = "include" _ file:String _override:(_ "{" Doc "}")? {
 Ref = variableName:Identifier _ defType:("=" / "|=" / "&=") _ value:(Identifiers / String / ListDef / NodeDef / MultipleDef / Identifier) merge:(_ "&" _ Identifier)? {
 	const ref = {
 	type: defType === "=" ? "ref" : defType === "|=" ? "marge-or" : "marge-and",
-		variableName: variableName,
+		variableName: variableName.name,
 		value,
 	}
 	if (merge) ref.merge = merge[3]
@@ -55,22 +56,28 @@ NodeDef = nodeType:NodeType _ name:(AttrName) _ "{" _  contents:(AttrValue / Ide
 		case "element":
 			return {
 				type: nodeType,
-				name,
+				...name,
 				contents,
 				required,
 			}
 		case "attribute":
 			return {
 				type: nodeType,
-				name,
+				...name,
 				value: contents,
 				required,
 		}
 	}
 }
 
-AttrName = name:(MultipleNodeName / NodeName) not:(_ "-" _ (MultipleNodeName / NodeName)) {
-	return {name, not: not[3]}
+AttrName =  AttrNameWithNot / AttrNameSingle
+
+AttrNameSingle = name:(MultipleNodeName / NodeName) {
+	return {...name}
+}
+
+AttrNameWithNot = name:AttrNameSingle not:(_ "-" _ (MultipleNodeName / NodeName)) {
+	return {...name, not: not[3]}
 }
 
 
@@ -87,7 +94,7 @@ MultipleDef = "(" _ ids:(Identifiers / Identifier) _ ")" Required  {
 
 NodeType = "element" / "attribute"
 
-MultipleNodeName = "(" _ names:NodeNamesOrList _ ")"  {
+MultipleNodeName = "(" _ names:(NodeNamesOrList / NodeName) _ ")"  {
 	return names
 }
 
@@ -102,7 +109,7 @@ nsNodeName = ns:$[a-zA-Z0-9]+ ":" name:nonnsNodeName {
 }
 
 nonnsNodeName = name:($[a-zA-Z0-9-] / "*")+ {
-	return { name }
+	return { name: name.join('') }
 }
 
 Identifiers = IdentifiersAndList / IdentifiersOrList / IdentifiersCommaList
@@ -164,15 +171,21 @@ Constant = valueType:ValueType _ value:String {
 	}
 }
 
-RegExp = valueType:ValueType _ "{" _ "pattern" _ "=" _ pattern:String  _ "}" required:Required {
+RegExp = RegExpWithMinLength / RegExpPatternOnly
+
+RegExpPatternOnly = valueType:ValueType _ "{" _ "pattern" _ "=" _ pattern:String  _ "}" required:Required {
 	return {
 		type: "regexp-pattern",
 		pattern,
 	}
 }
 
-Comment = "#" comment:$[^\n]* {
-	return null
+RegExpWithMinLength = valueType:ValueType _ "{" _ "pattern" _ "=" _ pattern:String  _ "minLength" _ "=" _ minLength:String _  "}" required:Required {
+	return {
+		type: "regexp-pattern",
+		pattern,
+        minLength,
+	}
 }
 
 
@@ -207,5 +220,12 @@ Required = _ token:("*" / "+" / "?" / "") {
 	}
 }
 
-_ = (WHITESPACE Comment WHITESPACE)+ / WHITESPACE
-WHITESPACE = [ \t\n\r]*
+_ = Comment+ / WHITESPACE
+
+Comment = WHITESPACE "#" comment:$[^\n]* WHITESPACE {
+	return null
+}
+
+WHITESPACE = [ \t\n\r]* {
+   return null
+}

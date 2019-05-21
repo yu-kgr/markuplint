@@ -1,7 +1,7 @@
-import { Attribute, Element, Ref, Values, parse } from './parser';
+import { Attribute, Element, Grammer, Values, parse } from './tokenizer';
+import { parse as pathParse, resolve } from 'path';
 import { readFile, writeFile } from 'fs';
 import { promisify } from 'util';
-import { resolve } from 'path';
 
 const asyncReadFlie = promisify(readFile);
 
@@ -13,50 +13,55 @@ Map.prototype.toJSON = function() {
 
 async function loadRNC(path: string) {
 	try {
-		const rnc = await asyncReadFlie(resolve(__dirname, path), { encoding: 'utf-8' });
+		const rnc = await asyncReadFlie(path, { encoding: 'utf-8' });
 		return parse(rnc);
 	} catch (e) {
-		console.warn(e);
+		// console.warn(e);
 	}
 	return [];
 }
 
-async function main() {
-	const grammers = await loadRNC('../src/html5.rnc');
+async function getGrammersRecursive(grammers: Grammer[], baseDir: string) {
+	const newGrammers: Grammer[] = [];
+	for (const grammer of grammers) {
+		switch (grammer.type) {
+			case 'include': {
+				const gs = await loadRNC(resolve(baseDir, `${grammer.file}`));
+				newGrammers.push(...gs);
+				continue;
+			}
+		}
+		newGrammers.push(grammer);
+	}
+	return newGrammers;
+}
 
-	const refs: Ref[] = [];
+async function main() {
+	const basePath = resolve(__dirname, '../../html-ls/schema/html5/html5.rnc');
+	const baseDir = pathParse(basePath).dir;
+	const _grammers = await loadRNC(basePath);
+	const grammers = await getGrammersRecursive(_grammers, baseDir);
+
+	const vars = new Map<string, Values>();
 
 	for (const grammer of grammers) {
 		switch (grammer.type) {
 			case 'ref': {
-				refs.push(grammer);
+				vars.set(grammer.variableName.name, grammer.value);
+				continue;
+			}
+			case 'marge-or':
+			case 'marge-and': {
+				if (!vars.has(grammer.variableName.name)) {
+					vars.set(grammer.variableName.name, grammer.value || []);
+				} else {
+					const variable = vars.get(grammer.variableName.name)!;
+					if (grammer.type === 'marge-or') {
+						//
+					}
+				}
 			}
 		}
-	}
-
-	for (const grammer of grammers) {
-		switch (grammer.type) {
-			// @ts-ignore
-			case 'include': {
-				// @ts-ignore
-				console.log(grammer.type, grammer.file);
-				// @ts-ignore
-				const externalRefs = await loadRNC(`../src/${grammer.file}`);
-				console.log(externalRefs);
-				refs.push(...externalRefs);
-			}
-		}
-	}
-
-	const vars = new Map<string, Values>();
-
-	for (const ref of refs) {
-		if (vars.has(ref.variableName.name)) {
-			// TODO: merging
-			vars.set(ref.variableName.name + '__', ref.value);
-			return;
-		}
-		vars.set(ref.variableName.name, ref.value);
 	}
 
 	const resolvedVars: Vars = new Map<string, Values>();
@@ -101,6 +106,10 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr, e
 				}
 			}
 			input.set(name, newValues);
+		} else if ('or' in values) {
+			//
+		} else if ('and' in values) {
+			//
 		} else if (values.type === 'variable') {
 			const rawValue = vars.get(values.name);
 			if (rawValue) {
@@ -109,18 +118,23 @@ function resolver(input: Map<string, Values | string>, vars: Vars, attr: Attr, e
 				input.set(name, newValue.length === 1 ? newValue[0] : newValue);
 			}
 		} else if (values.type === 'element') {
-			elems.set(name, { name: values.name, value: '★' });
+			// @ts-ignore
+			elems.set(name, { name: values.name, value: values.contents });
 		} else if (values.type === 'attribute') {
 			const attrName =
 				typeof values.name === 'string'
 					? values.name
 					: values.name.ns
-					? `${values.name.ns}:${values.name.name}`
-					: values.name.name;
+						? `${values.name.ns}:${values.name.name}`
+						: values.name.name;
 			let value: string | string[];
 			if (Array.isArray(values.value)) {
 				// @ts-ignore
 				value = values.value.map(v => v.value);
+			} else if ('or' in values.value) {
+				//
+			} else if ('and' in values.value) {
+				//
 			} else {
 				if (values.value.type === 'keyword') {
 					value = `keyword::${values.value.value}`;
@@ -151,6 +165,10 @@ function ref(ctx: Values, vars: Vars, depth = 0): (string | Element | Attribute)
 	}
 	if (Array.isArray(ctx)) {
 		return ctx.map(c => ref(c, vars)).flat();
+	} else if ('or' in ctx) {
+		return [];
+	} else if ('and' in ctx) {
+		return [];
 	} else if (ctx.type === 'variable') {
 		const rawValue = vars.get(ctx.name);
 		if (rawValue) {
